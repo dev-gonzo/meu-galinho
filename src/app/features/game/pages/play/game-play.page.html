@@ -1,0 +1,24 @@
+<div #gameContainer class="game-container"></div>
+<app-marker />
+
+<app-intial-round
+  *ngIf="showInitialRound"
+  [roundNumber]="combatService.currentRound"
+  (initiativeExecuted)="onInitiativeExecuted()"
+/>
+<app-initiative
+  *ngIf="showInitiative"
+  (initiativeFinished)="onInitiativeFinished()"
+/>
+<app-fight-end 
+  *ngIf="showFightEnd"
+  [result]="fightResult"
+  (fightEndFinished)="onFightEndFinished()"
+/>
+<app-round-end
+  *ngIf="showRoundEnd"
+  [playerWon]="playerWonRound"
+  (roundEndFinished)="onRoundEndFinished()"
+/>
+
+<app-control />

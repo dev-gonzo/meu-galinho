@@ -1,0 +1,157 @@
+{
+  "golpes": [
+    {
+      "id": 1,
+      "nome": "Bicar",
+      "tipo": "golpe_basico",
+      "nivelNecessario": 1,
+      "restricaoPersonagem": null,
+      "velocidade": "iniciativaBasica - 2",
+      "dano": "fr - 2",
+      "atributo": "fr",
+      "custoFadiga": 5,
+      "descricao": "Ataque básico com o bico disponível para todos os personagens"
+    },
+    {
+      "id": 2,
+      "nome": "Esporar",
+      "tipo": "golpe_basico",
+      "nivelNecessario": 1,
+      "restricaoPersonagem": null,
+      "velocidade": "iniciativaBasica - 3",
+      "dano": "fr - 1",
+      "atributo": "fr",
+      "custoFadiga": 7,
+      "descricao": "Ataque básico com as esporas disponível para todos os personagens"
+    },
+    {
+      "id": 3,
+      "nome": "Empurrar",
+      "tipo": "golpe_basico",
+      "nivelNecessario": 1,
+      "restricaoPersonagem": null,
+      "velocidade": "iniciativaBasica - 1",
+      "dano": "fr - 3",
+      "atributo": "fr",
+      "custoFadiga": 3,
+      "descricao": "Ataque básico de empurrão disponível para todos os personagens"
+    },
+    {
+      "id": 4,
+      "nome": "Bicada Furiosa",
+      "tipo": "golpe",
+      "nivelNecessario": 2,
+      "restricaoPersonagem": ["Galo de Briga"],
+      "velocidade": "iniciativaBasica - 1",
+      "dano": "fr + 2",
+      "atributo": "fr",
+      "custoFadiga": 8,
+      "descricao": "Um ataque feroz com o bico que causa dano extra"
+    },
+    {
+      "id": 5,
+      "nome": "Combo de Esporas",
+      "tipo": "golpe",
+      "nivelNecessario": 3,
+      "restricaoPersonagem": ["Galo de Briga"],
+      "velocidade": "iniciativaBasica - 5",
+      "dano": "fr * 1.5",
+      "atributo": "fr",
+      "custoFadiga": 12,
+      "descricao": "Sequência rápida de ataques com as esporas"
+    },
+    {
+      "id": 6,
+      "nome": "Voo Rasante",
+      "tipo": "golpe",
+      "nivelNecessario": 2,
+      "restricaoPersonagem": ["Galinha Caipira"],
+      "velocidade": "iniciativaBasica + 2",
+      "dano": "ag + 1",
+      "atributo": "ag",
+      "custoFadiga": 6,
+      "descricao": "Ataque aéreo rápido e preciso"
+    },
+    {
+      "id": 7,
+      "nome": "Investida Selvagem",
+      "tipo": "golpe",
+      "nivelNecessario": 4,
+      "restricaoPersonagem": null,
+      "velocidade": "iniciativaBasica - 6",
+      "dano": "fr + rs",
+      "atributo": "fr",
+      "custoFadiga": 15,
+      "descricao": "Ataque devastador que usa força e resistência"
+    },
+    {
+      "id": 8,
+      "nome": "Ataque Giratório",
+      "tipo": "golpe",
+      "nivelNecessario": 3,
+      "restricaoPersonagem": null,
+      "velocidade": "iniciativaBasica - 3",
+      "dano": "ag + fr/2",
+      "atributo": "ag",
+      "custoFadiga": 10,
+      "descricao": "Giro completo atingindo múltiplos alvos"
+    }
+  ],
+  "poderes": [
+    {
+      "id": 9,
+      "nome": "Fúria do Galo",
+      "tipo": "poder",
+      "nivelNecessario": 5,
+      "restricaoPersonagem": ["Galo de Briga"],
+      "duracao": "3 turnos",
+      "efeito": "fr + 3, ag + 1",
+      "custoFadiga": 20,
+      "descricao": "Aumenta drasticamente a força e agilidade por alguns turnos"
+    },
+    {
+      "id": 10,
+      "nome": "Instinto Maternal",
+      "tipo": "poder",
+      "nivelNecessario": 4,
+      "restricaoPersonagem": ["Galinha Caipira"],
+      "duracao": "5 turnos",
+      "efeito": "rs + 2, esquiva + 2",
+      "custoFadiga": 15,
+      "descricao": "Aumenta a resistência e capacidade de esquiva"
+    },
+    {
+      "id": 11,
+      "nome": "Regeneração",
+      "tipo": "poder",
+      "nivelNecessario": 6,
+      "restricaoPersonagem": null,
+      "duracao": "instantâneo",
+      "efeito": "recupera rs * 2 pontos de vida",
+      "custoFadiga": 25,
+      "descricao": "Recupera pontos de vida baseado na resistência"
+    },
+    {
+      "id": 12,
+      "nome": "Velocidade Extrema",
+      "tipo": "poder",
+      "nivelNecessario": 3,
+      "restricaoPersonagem": null,
+      "duracao": "2 turnos",
+      "efeito": "ag * 2, iniciativa + 5",
+      "custoFadiga": 18,
+      "descricao": "Dobra a agilidade e aumenta muito a iniciativa"
+    },
+    {
+      "id": 13,
+      "nome": "Pele de Ferro",
+      "tipo": "poder",
+      "nivelNecessario": 7,
+      "restricaoPersonagem": null,
+      "duracao": "4 turnos",
+      "efeito": "bloqueio + 5, reduz dano recebido em 50%",
+      "custoFadiga": 30,
+      "descricao": "Torna a pele extremamente resistente a ataques"
+    }
+  ]
+}

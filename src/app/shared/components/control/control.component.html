@@ -1,0 +1,47 @@
+<div class="size-h">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-3 d-flex align-items-end">
+        <button
+          type="button"
+          class="bg-transparent border-0"
+          (click)="exitGame()"
+        >
+          <img src="assets/elementos/close.png" alt="Sair" width="50" />
+        </button>
+      </div>
+
+      <div class="col-9 d-flex justify-content-end align-items-end flex-column">
+        <!-- Botões de teste para configurar rounds -->
+        <div class="rounds-config" style="margin-bottom: 10px; text-align: center;">
+
+        </div>
+        
+        <button
+          type="button"
+          class="bg-transparent border-0"
+          (click)="special()"
+          style="margin-right: 5px; margin-bottom: -20px"
+        >
+          <img src="assets/elementos/especial.png" alt="Especial" width="80" />
+        </button>
+        <button
+          type="button"
+          class="bg-transparent border-0"
+          (click)="punch()"
+          style="margin-right: 90px"
+        >
+          <img src="assets/elementos/soco.png" alt="Soco" width="80" />
+        </button>
+        <button type="button" class="bg-transparent border-0" (click)="usePotion()">
+          <img
+            src="assets/elementos/pocao.png"
+            alt="Poção"
+            width="80"
+            style="margin-right: 5px; margin-top: -20px"
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+/* Bootstrap imports */
+@use "bootstrap/scss/bootstrap" as *;
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+/* Estilos para o jogo */
+/* .game-container otimizado - usar classes Bootstrap: d-flex justify-content-center align-items-center min-vh-100 */
+/* Background gradient customizado mantido apenas onde necessário */
+
+.game-canvas {
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+
+  // Desabilitar completamente qualquer animação ou transição
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  filter: none !important;
+
+  // Garantir renderização estática
+  will-change: auto !important;
+  backface-visibility: visible !important;
+  perspective: none !important;
+
+  // Desabilitar suavização que pode causar efeitos visuais
+  image-rendering: pixelated !important;
+  image-rendering: -moz-crisp-edges !important;
+  image-rendering: crisp-edges !important;
+}
+
+/* Desabilitar animações globais que possam afetar o jogo */
+* {
+  animation-play-state: paused !important;
+}
+
+canvas {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  will-change: auto !important;
+}
+
+.text-outline {
+  -webkit-text-stroke: 0.6px black; /* Espessura e cor do contorno */
+}
+
+.bg-dropback{
+  background-color: rgba($color: #000000, $alpha: 0.8);
+}
+
+.pt-msg{
+  padding-top: 20rem !important;
+}

@@ -1,0 +1,20 @@
+<div
+  class="bg-dropback d-100 vh-100 d-flex justify-content-center "
+>
+  <div
+    class="d-flex  flex-column pt-msg"
+  >
+    <img
+      *ngIf="playerStarts"
+      src="assets/elementos/voce-comeca.png"
+      alt="Você começa!"
+      width="300"
+    />
+    <img
+      *ngIf="!playerStarts"
+      src="assets/elementos/oponente-comeca.png"
+      alt="Seu oponente começa!"
+      width="300"
+    />
+  </div>
+</div>

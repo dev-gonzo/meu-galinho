@@ -1,0 +1,48 @@
+{
+  "personagem": [
+    {
+      "id": 1,
+      "nivel": 1,
+      "atributos": [
+        {
+          "nome": "Força",
+          "sigla": "fr",
+          "valor": 1
+        },
+        {
+          "nome": "Agilidade",
+          "sigla": "ag",
+          "valor": 1
+        },
+        {
+          "nome": "Resistência",
+          "sigla": "rs",
+          "valor": 1
+        }
+      ],
+      "pontosDeVida": "fr + rs + 3 + nivel",
+      "fadiga": "rs + ag + nivel",
+      "iniciativaBasica": "ag + fr/2 + nivel",
+      "defesa": [
+        {
+          "esquiva": "iniciativaBasica + nivel",
+          "bloqueio": "fr/3 + nivel"
+        }
+      ],
+      "listaGolpes": [
+        {
+          "nome": "Bicar",
+          "velocidade": "iniciativaBasica - 2",
+          "dano": "fr - 2",
+          "atributo": "fr"
+        },
+        {
+          "nome": "Espora",
+          "velocidade": "iniciativaBasica - 3",
+          "dano": "fr - 1",
+          "atributo": "fr"
+        }
+      ]
+    }
+  ]
+}

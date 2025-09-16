@@ -1,0 +1,173 @@
+[
+  {
+    "level": 3,
+    "dice": 1,
+    "modifier": -4,
+    "damageMin": 1
+  },
+  {
+    "level": 6,
+    "dice": 1,
+    "modifier": -3
+  },
+  {
+    "level": 9,
+    "dice": 1,
+    "modifier": -2
+  },
+  {
+    "level": 12,
+    "dice": 1,
+    "modifier": -1
+  },
+  {
+    "level": 15,
+    "dice": 1,
+    "modifier": 0
+  },
+  {
+    "level": 18,
+    "dice": 1,
+    "modifier": 1
+  },
+  {
+    "level": 21,
+    "dice": 1,
+    "modifier": 2
+  },
+  {
+    "level": 24,
+    "dice": 1,
+    "modifier": 3
+  },
+  {
+    "level": 27,
+    "dice": 2,
+    "modifier": -2
+  },
+  {
+    "level": 30,
+    "dice": 2,
+    "modifier": -2
+  },
+  {
+    "level": 33,
+    "dice": 2,
+    "modifier": -1
+  },
+  {
+    "level": 36,
+    "dice": 2,
+    "modifier": 0
+  },
+  {
+    "level": 39,
+    "dice": 2,
+    "modifier": 0
+  },
+  {
+    "level": 42,
+    "dice": 2,
+    "modifier": 1
+  },
+  {
+    "level": 45,
+    "dice": 2,
+    "modifier": 2
+  },
+  {
+    "level": 48,
+    "dice": 2,
+    "modifier": 2
+  },
+  {
+    "level": 51,
+    "dice": 2,
+    "modifier": 3
+  },
+  {
+    "level": 54,
+    "dice": 3,
+    "modifier": -2
+  },
+  {
+    "level": 57,
+    "dice": 3,
+    "modifier": -1
+  },
+  {
+    "level": 60,
+    "dice": 3,
+    "modifier": 0
+  },
+  {
+    "level": 63,
+    "dice": 3,
+    "modifier": 0
+  },
+  {
+    "level": 66,
+    "dice": 3,
+    "modifier": 1
+  },
+  {
+    "level": 69,
+    "dice": 3,
+    "modifier": 2
+  },
+  {
+    "level": 72,
+    "dice": 3,
+    "modifier": 2
+  },
+  {
+    "level": 75,
+    "dice": 3,
+    "modifier": 3
+  },
+  {
+    "level": 78,
+    "dice": 4,
+    "modifier": -2
+  },
+  {
+    "level": 81,
+    "dice": 4,
+    "modifier": -1
+  },
+  {
+    "level": 84,
+    "dice": 4,
+    "modifier": 0
+  },
+  {
+    "level": 87,
+    "dice": 4,
+    "modifier": 0
+  },
+  {
+    "level": 90,
+    "dice": 4,
+    "modifier": 1
+  },
+  {
+    "level": 93,
+    "dice": 4,
+    "modifier": 2
+  },
+  {
+    "level": 96,
+    "dice": 4,
+    "modifier": 2
+  },
+  {
+    "level": 99,
+    "dice": 4,
+    "modifier": 3
+  },
+  {
+    "level": 100,
+    "dice": 4,
+    "modifier": 3
+  }
+]

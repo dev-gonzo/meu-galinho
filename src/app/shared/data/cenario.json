@@ -1,0 +1,20 @@
+{
+  "cenarios": [
+    {
+      "nome": "Cenário 1",
+      "path": "cenario-1"
+    },
+    {
+      "nome": "Cenário 2",
+      "path": "cenario-2"
+    },
+    {
+      "nome": "Cenário 3",
+      "path": "cenario-3"
+    },
+    {
+      "nome": "Cenário 4",
+      "path": "cenario-4"
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "personagens": [
+    {
+      "id": 1,
+      "nome": "Galinho Guerreiro",
+      "tipo": "Galo de Briga",
+      "nivel": 1,
+      "atributos": [
+        {
+          "nome": "Força",
+          "sigla": "fr",
+          "valor": 2
+        },
+        {
+          "nome": "Agilidade",
+          "sigla": "ag",
+          "valor": 1
+        },
+        {
+          "nome": "Resistência",
+          "sigla": "rs",
+          "valor": 2
+        }
+      ],
+      "pontosDeVida": "fr + rs + 3 + nivel",
+      "fadiga": "rs + ag + nivel",
+      "iniciativaBasica": "ag + fr/2 + nivel",
+      "defesa": [
+        {
+          "esquiva": "iniciativaBasica + nivel",
+          "bloqueio": "fr/3 + nivel"
+        }
+      ],
+      "listaGolpes": [
+        {
+          "nome": "Bicar",
+          "velocidade": "iniciativaBasica - 2",
+          "dano": "fr - 2",
+          "atributo": "fr"
+        },
+        {
+          "nome": "Espora",
+          "velocidade": "iniciativaBasica - 3",
+          "dano": "fr - 1",
+          "atributo": "fr"
+        },
+        {
+          "nome": "Investida",
+          "velocidade": "iniciativaBasica - 4",
+          "dano": "fr + 1",
+          "atributo": "fr"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "nome": "Galinha Ágil",
+      "tipo": "Galinha Caipira",
+      "nivel": 1,
+      "atributos": [
+        {
+          "nome": "Força",
+          "sigla": "fr",
+          "valor": 1
+        },
+        {
+          "nome": "Agilidade",
+          "sigla": "ag",
+          "valor": 3
+        },
+        {
+          "nome": "Resistência",
+          "sigla": "rs",
+          "valor": 1
+        }
+      ],
+      "pontosDeVida": "fr + rs + 3 + nivel",
+      "fadiga": "rs + ag + nivel",
+      "iniciativaBasica": "ag + fr/2 + nivel",
+      "defesa": [
+        {
+          "esquiva": "iniciativaBasica + nivel",
+          "bloqueio": "fr/3 + nivel"
+        }
+      ],
+      "listaGolpes": [
+        {
+          "nome": "Bicar Rápido",
+          "velocidade": "iniciativaBasica - 1",
+          "dano": "fr - 3",
+          "atributo": "ag"
+        },
+        {
+          "nome": "Esquiva e Ataque",
+          "velocidade": "iniciativaBasica",
+          "dano": "ag - 2",
+          "atributo": "ag"
+        },
+        {
+          "nome": "Voo Baixo",
+          "velocidade": "iniciativaBasica - 2",
+          "dano": "ag - 1",
+          "atributo": "ag"
+        }
+      ]
+    }
+  ]
+}
