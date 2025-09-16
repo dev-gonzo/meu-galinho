@@ -4,6 +4,30 @@ import { BehaviorSubject, Subject } from "rxjs";
 import { CharacterHelper } from "../../../shared/helpers/character.helper";
 import { FigtherHelper } from "../../../shared/helpers/fighter.helpers";
 import { Character } from "../../../shared/type/character";
+import { GameState } from "../../../shared/type/game";
+
+/**
+ * Interface para eventos de combate
+ */
+interface CombatEvent {
+  type: 'damage' | 'heal' | 'victory' | 'defeat' | 'turn_start' | 'turn_end' | 'round_start' | 'round_end';
+  data?: {
+    amount?: number;
+    target?: 'player' | 'enemy';
+    round?: number;
+    turn?: number;
+    winner?: 'player' | 'enemy';
+  };
+}
+
+/**
+ * Interface para container do Phaser
+ */
+interface PhaserContainer {
+  nativeElement?: HTMLElement;
+  clientWidth?: number;
+  clientHeight?: number;
+}
 
 /**
  * Classe unificada que combina Phaser.Scene e serviço Angular de combate
@@ -15,7 +39,6 @@ export class CombatService extends Phaser.Scene {
   // Propriedades do Phaser
   public override game!: Phaser.Game;
   private background!: Phaser.GameObjects.Image;
-  private resizeListener!: () => void;
 
   // Propriedades de combate
   private playerFighter: FigtherHelper | null = null;
@@ -29,14 +52,15 @@ export class CombatService extends Phaser.Scene {
     enemyMaxHP: number;
   }>();
 
-  private readonly gameStateSubject = new BehaviorSubject<{
-    currentRound: number;
-    currentTurn: number;
-    gameActive: boolean;
-  }>({
+  private readonly gameStateSubject = new BehaviorSubject<Partial<GameState>>({
     currentRound: 1,
     currentTurn: 1,
-    gameActive: false
+    gameActive: false,
+    sceneReady: false,
+    playerRoundVictory: 0,
+    enemyRoundVictory: 0,
+    totalRounds: 3,
+    fightFinished: false
   });
 
   public hpUpdate$ = this.hpUpdateSubject.asObservable();
@@ -60,7 +84,7 @@ export class CombatService extends Phaser.Scene {
   public currentRound = 1;
 
   // Observable para eventos de combate
-  private readonly combatEventSubject = new Subject<any>();
+  private readonly combatEventSubject = new Subject<CombatEvent>();
   public combatEvent$ = this.combatEventSubject.asObservable();
 
 
@@ -77,11 +101,9 @@ export class CombatService extends Phaser.Scene {
   }
 
   /**
-   * Verifica se o jogador começa
+   * Verifica se o jogador começa primeiro
    */
-  get playerStarts(): boolean {
-    return true; // Por padrão, jogador sempre começa
-  }
+  readonly playerStarts: boolean = true; // Por padrão, jogador sempre começa
 
   /**
    * Emite evento de vitória
@@ -131,6 +153,12 @@ export class CombatService extends Phaser.Scene {
     
     console.log(`Soco causou ${damage} de dano. HP inimigo: ${this.enemyFighter.character.lifePoints}`);
     
+    // Emitir evento de dano
+    this.emitCombatEvent({ 
+      type: 'damage', 
+      data: { amount: damage, target: 'enemy' } 
+    });
+    
     this.notifyHPUpdate();
   }
 
@@ -153,6 +181,12 @@ export class CombatService extends Phaser.Scene {
     this.playerFighter.character.updatePercentageLife();
     
     console.log(`Defesa: inimigo contra-atacou causando ${damage} de dano. HP jogador: ${this.playerFighter.character.lifePoints}`);
+    
+    // Emitir evento de dano
+    this.emitCombatEvent({ 
+      type: 'damage', 
+      data: { amount: damage, target: 'player' } 
+    });
     
     this.notifyHPUpdate();
   }
@@ -177,6 +211,12 @@ export class CombatService extends Phaser.Scene {
     
     console.log(`Golpe especial causou ${damage} de dano. HP inimigo: ${this.enemyFighter.character.lifePoints}`);
     
+    // Emitir evento de dano
+    this.emitCombatEvent({ 
+      type: 'damage', 
+      data: { amount: damage, target: 'enemy' } 
+    });
+    
     this.notifyHPUpdate();
   }
 
@@ -200,6 +240,12 @@ export class CombatService extends Phaser.Scene {
     this.playerFighter.character.updatePercentageLife();
     
     console.log(`Poção curou ${healing} HP. HP jogador: ${this.playerFighter.character.lifePoints}/${maxHP}`);
+    
+    // Emitir evento de cura
+    this.emitCombatEvent({ 
+      type: 'heal', 
+      data: { amount: healing, target: 'player' } 
+    });
     
     this.notifyHPUpdate();
   }
@@ -232,13 +278,23 @@ export class CombatService extends Phaser.Scene {
   /**
    * Inicializa o jogo
    */
-  initializeGame(container: any): void {
+  initializeGame(container: PhaserContainer | HTMLElement): void {
     console.log('Inicializando jogo');
-    const element = container.nativeElement || container;
+    
+    // Determinar o elemento HTML correto
+    let element: HTMLElement;
+    if ('nativeElement' in container && container.nativeElement) {
+      element = container.nativeElement;
+    } else if (container instanceof HTMLElement) {
+      element = container;
+    } else {
+      throw new Error('Container inválido fornecido para initializeGame');
+    }
+    
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
-      width: element.clientWidth,
-      height: element.clientHeight,
+      width: element.clientWidth || 800,
+      height: element.clientHeight || 600,
       parent: element,
       scene: this,
       physics: {
@@ -389,6 +445,13 @@ export class CombatService extends Phaser.Scene {
   }
 
   /**
+   * Emite um evento de combate tipado
+   */
+  private emitCombatEvent(event: CombatEvent): void {
+    this.combatEventSubject.next(event);
+  }
+
+  /**
    * Notifica que as barras de HP precisam ser atualizadas
    */
   notifyHPUpdate(): void {
@@ -415,8 +478,10 @@ export class CombatService extends Phaser.Scene {
       console.log("Jogo acabou!");
       if (this.playerFighter?.getCurrentHP() === 0) {
         this.emitDefeat();
+        this.emitCombatEvent({ type: 'defeat', data: { winner: 'enemy' } });
       } else {
         this.emitVictory();
+        this.emitCombatEvent({ type: 'victory', data: { winner: 'player' } });
       }
     }
   }

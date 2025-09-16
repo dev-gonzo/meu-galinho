@@ -61,17 +61,18 @@ export class GamePlayPage implements AfterViewInit, OnDestroy {
     // Inscrever-se nos eventos de combate
     this.combatService.combatEvent$.subscribe((event) => {
       console.log('🎮 Evento recebido:', event);
-      if (event.message === "fight-end") {
+      
+      if (event.type === 'victory' || event.type === 'defeat') {
         // Fim da luta
         console.log('🏁 FIGHT END detectado! Resultado:', event.type);
         this.fightResult = event.type;
         this.showFightEnd = true;
         this.cdr.detectChanges();
         console.log('✅ showFightEnd definido como:', this.showFightEnd);
-      } else {
+      } else if (event.type === 'round_end') {
         // Fim de round
         console.log('🔄 Round end detectado');
-        this.playerWonRound = event.type === "victory";
+        this.playerWonRound = event.data?.winner === 'player';
         this.showRoundEnd = true;
       }
     });

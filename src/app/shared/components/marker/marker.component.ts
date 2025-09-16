@@ -46,8 +46,8 @@ export class MarkerComponent implements OnInit, OnDestroy {
     // Se inscrever para atualizações do estado do jogo (turno e round)
     this.gameStateSubscription = this.combatService.gameState$.subscribe(
       (gameState) => {
-        this.currentRound = gameState.currentRound;
-        this.currentTurn = gameState.currentTurn;
+        this.currentRound = gameState.currentRound ?? 1;
+        this.currentTurn = gameState.currentTurn ?? 1;
       }
     );
   }
