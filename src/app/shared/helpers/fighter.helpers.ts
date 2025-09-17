@@ -20,6 +20,8 @@ export class FigtherHelper {
   constructor(character: CharacterHelper) {
     // Se receber uma instância de CharacterHelper, clona ela
     // Se receber dados simples, cria uma nova instância
+
+    console.log(character)
     if (character instanceof CharacterHelper) {
       this.character = character.clone();
     } else {
@@ -305,11 +307,11 @@ export class FigtherHelper {
   }
 
   getGolpes(): {
-    nome: string;
-    velocidade: string;
-    dano: string;
-    atributo: string;
+    name: string;
+    speedReducer: number;
+    damage: number;
+    amount: number;
   }[] {
-    return this.character.listaGolpes;
+    return this.character.scamsList;
   }
 }

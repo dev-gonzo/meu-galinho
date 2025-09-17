@@ -30,26 +30,26 @@ export class MarkerComponent implements OnInit, OnDestroy {
     this.combatService.initializeCombat();
 
     // Obter referências dos personagens
-    this.playerFighter = this.combatService.getPlayer();
-    this.enemyFighter = this.combatService.getEnemy();
+    // this.playerFighter = this.combatService.getPlayer();
+    // this.enemyFighter = this.combatService.getEnemy();
 
     // Calcular porcentagens de HP
-    this.updateHPPercentages();
+    // this.updateHPPercentages();
 
-    // Se inscrever para atualizações de HP
-    this.hpUpdateSubscription = this.combatService.hpUpdate$.subscribe(
-      (hpData) => {
-        this.updateHPPercentagesFromData(hpData);
-      }
-    );
+    // // Se inscrever para atualizações de HP
+    // this.hpUpdateSubscription = this.combatService.hpUpdate$.subscribe(
+    //   (hpData) => {
+    //     this.updateHPPercentagesFromData(hpData);
+    //   }
+    // );
 
-    // Se inscrever para atualizações do estado do jogo (turno e round)
-    this.gameStateSubscription = this.combatService.gameState$.subscribe(
-      (gameState) => {
-        this.currentRound = gameState.currentRound ?? 1;
-        this.currentTurn = gameState.currentTurn ?? 1;
-      }
-    );
+    // // Se inscrever para atualizações do estado do jogo (turno e round)
+    // this.gameStateSubscription = this.combatService.gameState$.subscribe(
+    //   (gameState) => {
+    //     this.currentRound = gameState.currentRound ?? 1;
+    //     this.currentTurn = gameState.currentTurn ?? 1;
+    //   }
+    // );
   }
 
   ngOnDestroy(): void {
@@ -57,26 +57,25 @@ export class MarkerComponent implements OnInit, OnDestroy {
     this.gameStateSubscription?.unsubscribe();
   }
 
-  private updateHPPercentages(): void {
-    // Obter referências atualizadas dos personagens
-    const currentPlayer = this.combatService.getPlayer();
-    const currentEnemy = this.combatService.getEnemy();
+  // private updateHPPercentages(): void {
+  //   // Obter referências atualizadas dos personagens
+ 
 
-    if (currentPlayer) {
-      const playerMaxHP = currentPlayer.getMaxHP();
-      const playerCurrentHP = currentPlayer.getCurrentHP();
-      this.playerHPPercentage = Math.max(
-        0,
-        (playerCurrentHP / playerMaxHP) * 100
-      );
-    }
+  //   if (currentPlayer) {
+  //     const playerMaxHP = currentPlayer.getMaxHP();
+  //     const playerCurrentHP = currentPlayer.getCurrentHP();
+  //     this.playerHPPercentage = Math.max(
+  //       0,
+  //       (playerCurrentHP / playerMaxHP) * 100
+  //     );
+  //   }
 
-    if (currentEnemy) {
-      const enemyMaxHP = currentEnemy.getMaxHP();
-      const enemyCurrentHP = currentEnemy.getCurrentHP();
-      this.enemyHPPercentage = Math.max(0, (enemyCurrentHP / enemyMaxHP) * 100);
-    }
-  }
+  //   if (currentEnemy) {
+  //     const enemyMaxHP = currentEnemy.getMaxHP();
+  //     const enemyCurrentHP = currentEnemy.getCurrentHP();
+  //     this.enemyHPPercentage = Math.max(0, (enemyCurrentHP / enemyMaxHP) * 100);
+  //   }
+  // }
 
   private updateHPPercentagesFromData(hpData: {
     playerHP: number;
@@ -94,7 +93,7 @@ export class MarkerComponent implements OnInit, OnDestroy {
     );
   }
 
-  public refreshHP(): void {
-    this.updateHPPercentages();
-  }
+  // public refreshHP(): void {
+  //   this.updateHPPercentages();
+  // }
 }

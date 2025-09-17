@@ -43,7 +43,7 @@ export class InitialRoundComponent {
   private readonly combatService = inject(CombatService);
 
   executeInitiative(): void {
-    this.combatService.initialRound();
+    // this.combatService.initialRound();
 
     // Aplicar animação de zoom out
     this.imageAnimationState = "out";

@@ -37,11 +37,11 @@ export class CharacterHelper {
   knockdown = false;
 
   // Lista de golpes disponíveis
-  listaGolpes: {
-    nome: string;
-    velocidade: string;
-    dano: string;
-    atributo: string;
+  scamsList: {
+    name: string;
+    speedReducer: number;
+    damage: number;
+    amount: number;
   }[] = [];
 
   constructor(data?: Character | CharacterHelper) {
@@ -90,24 +90,24 @@ export class CharacterHelper {
     this.knockdown = false;
 
     // Inicializar golpes básicos
-    this.listaGolpes = [
+    this.scamsList = [
       {
-        nome: "Bicar",
-        velocidade: "iniciativaBasica - 2",
-        dano: "fr - 2",
-        atributo: "fr",
+        name: "Bicar",
+        speedReducer: -2,
+        damage: -2,
+        amount: -1,
       },
       {
-        nome: "Esporar",
-        velocidade: "iniciativaBasica - 3",
-        dano: "fr - 1",
-        atributo: "fr",
+        name: "Esporar",
+        speedReducer: -3,
+        damage: -1,
+        amount: -1,
       },
       {
-        nome: "Empurrar",
-        velocidade: "iniciativaBasica - 1",
-        dano: "fr - 3",
-        atributo: "fr",
+        name: "Empurrar",
+        speedReducer: -1,
+        damage: -3,
+        amount: -1,
       },
     ];
   }
@@ -265,7 +265,7 @@ export class CharacterHelper {
    */
   calculateInitiative(): number {
     // iniciativaBasica: "ag + fr/2 + nivel" (speed = agilidade)
-    return this.speed + Math.floor(this.strength / 2) + this.level;
+    return this.speed + Math.ceil(this.strength / 2) + this.level;
   }
 
   /**

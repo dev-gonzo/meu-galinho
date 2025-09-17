@@ -1,0 +1,47 @@
+{
+  "id": 2,
+  "level": 1,
+
+  "resistance": 1,
+  "strength": 2,
+  "speed": 3,
+
+  "totalLife": 0,
+  "attackSkill": 0,
+  "defenseSkill": 0,
+  "dodgeSkill": 0,
+  "damageResistance": 0,
+
+  "modifier": 0,
+
+  "attackBonus": 0,
+  "defenseBonus": 0,
+  "dodgeBonus": 0,
+  "damageBonus": 0,
+
+  "lifePoints": 0,
+  "percentageLifePoints": 1.0,
+
+  "knockdown": false,
+
+  "scamsList": [
+    {
+      "name": "Bicar",
+      "speedReducer": -2,
+      "damage": -2,
+      "amount": -1
+    },
+    {
+      "name": "Esporar",
+      "speedReducer": -3,
+      "damage": -1,
+      "amount": -1
+    },
+    {
+      "name": "Empurrar",
+      "speedReducer": -1,
+      "damage": -3,
+      "amount": -1
+    }
+  ]
+}

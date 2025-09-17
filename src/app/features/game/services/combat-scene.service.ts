@@ -1,33 +1,12 @@
 import { Injectable } from "@angular/core";
 import * as Phaser from "phaser";
-import { BehaviorSubject, Subject } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 import { CharacterHelper } from "../../../shared/helpers/character.helper";
 import { FigtherHelper } from "../../../shared/helpers/fighter.helpers";
-import { Character } from "../../../shared/type/character";
-import { GameState } from "../../../shared/type/game";
+import { PhaserContainer } from "../../../shared/type/PhaserContainer";
 
-/**
- * Interface para eventos de combate
- */
-interface CombatEvent {
-  type: 'damage' | 'heal' | 'victory' | 'defeat' | 'turn_start' | 'turn_end' | 'round_start' | 'round_end';
-  data?: {
-    amount?: number;
-    target?: 'player' | 'enemy';
-    round?: number;
-    turn?: number;
-    winner?: 'player' | 'enemy';
-  };
-}
-
-/**
- * Interface para container do Phaser
- */
-interface PhaserContainer {
-  nativeElement?: HTMLElement;
-  clientWidth?: number;
-  clientHeight?: number;
-}
+import enemyData from "../../../shared/data/character-enemy.json";
+import playerData from "../../../shared/data/character-players.json";
 
 /**
  * Classe unificada que combina Phaser.Scene e serviço Angular de combate
@@ -40,236 +19,40 @@ export class CombatService extends Phaser.Scene {
   public override game!: Phaser.Game;
   private background!: Phaser.GameObjects.Image;
 
+  private playerInitiative$ = new BehaviorSubject<boolean>(false);
+
+  getPlayerInitiativeObs() {
+    return this.playerInitiative$.asObservable();
+  }
+
   // Propriedades de combate
   private playerFighter: FigtherHelper | null = null;
   private enemyFighter: FigtherHelper | null = null;
-
-  // Observables para comunicação com componentes
-  private readonly hpUpdateSubject = new Subject<{
-    playerHP: number;
-    playerMaxHP: number;
-    enemyHP: number;
-    enemyMaxHP: number;
-  }>();
-
-  private readonly gameStateSubject = new BehaviorSubject<Partial<GameState>>({
-    currentRound: 1,
-    currentTurn: 1,
-    gameActive: false,
-    sceneReady: false,
-    playerRoundVictory: 0,
-    enemyRoundVictory: 0,
-    totalRounds: 3,
-    fightFinished: false
-  });
-
-  public hpUpdate$ = this.hpUpdateSubject.asObservable();
-  public gameState$ = this.gameStateSubject.asObservable();
-
-  // Callbacks para comunicação
-  private callbacks: {
-    hpUpdate?: () => void;
-    victory?: () => void;
-    defeat?: () => void;
-    nextTurn?: () => void;
-  } = {};
+  // private currentRound: number = 1;
+  // private currentTurn: number = 1;
+  // private gameActive: boolean = false;
+  // private sceneReady: boolean = false;
+  // private playerRoundVictory: number = 0;
+  // private enemyRoundVictory: number = 0;
+  // private totalRounds: number = 3;
+  // private fightFinished: boolean = false;
+  private playerIniciative = false;
 
   // Estado atual do jogo
   public currentGameState = {
     fightFinished: false,
-    winner: null as string | null
+    winner: null as string | null,
   };
-
-  // Round atual
-  public currentRound = 1;
-
-  // Observable para eventos de combate
-  private readonly combatEventSubject = new Subject<CombatEvent>();
-  public combatEvent$ = this.combatEventSubject.asObservable();
-
 
   constructor() {
     super({ key: "CombatScene" });
   }
 
   /**
-   * Inicializa o round inicial
-   */
-  initialRound(): void {
-    console.log('Iniciando round inicial');
-    // Lógica para inicializar o round pode ser adicionada aqui
-  }
-
-  /**
-   * Verifica se o jogador começa primeiro
-   */
-  readonly playerStarts: boolean = true; // Por padrão, jogador sempre começa
-
-  /**
-   * Emite evento de vitória
-   */
-  emitVictory(): void {
-    console.log('Vitória!');
-    if (this.callbacks.victory) {
-      this.callbacks.victory();
-    }
-  }
-
-  /**
-   * Emite evento de derrota
-   */
-  emitDefeat(): void {
-    console.log('Derrota!');
-    if (this.callbacks.defeat) {
-      this.callbacks.defeat();
-    }
-  }
-
-  /**
-   * Lista golpes dos personagens
-   */
-  listarGolpesPersonagens(): void {
-    console.log('Listando golpes dos personagens');
-    // Implementar lógica para listar golpes
-  }
-
-  /**
-   * Executa turno de soco
-   */
-  executePunchTurn(): void {
-    console.log('Executando turno de soco');
-    
-    if (!this.playerFighter || !this.enemyFighter) {
-      console.error('Fighters não inicializados');
-      return;
-    }
-
-    // Simular dano do soco (10-20 de dano)
-    const damage = Math.floor(Math.random() * 11) + 10;
-    
-    // Aplicar dano ao inimigo
-    this.enemyFighter.character.lifePoints = Math.max(0, this.enemyFighter.character.lifePoints - damage);
-    this.enemyFighter.character.updatePercentageLife();
-    
-    console.log(`Soco causou ${damage} de dano. HP inimigo: ${this.enemyFighter.character.lifePoints}`);
-    
-    // Emitir evento de dano
-    this.emitCombatEvent({ 
-      type: 'damage', 
-      data: { amount: damage, target: 'enemy' } 
-    });
-    
-    this.notifyHPUpdate();
-  }
-
-  /**
-   * Executa turno de defesa
-   */
-  executeDefendTurn(): void {
-    console.log('Executando turno de defesa');
-    
-    if (!this.playerFighter || !this.enemyFighter) {
-      console.error('Fighters não inicializados');
-      return;
-    }
-
-    // Simular contra-ataque do inimigo com dano reduzido
-    const damage = Math.floor(Math.random() * 6) + 5; // 5-10 de dano
-    
-    // Aplicar dano ao jogador
-    this.playerFighter.character.lifePoints = Math.max(0, this.playerFighter.character.lifePoints - damage);
-    this.playerFighter.character.updatePercentageLife();
-    
-    console.log(`Defesa: inimigo contra-atacou causando ${damage} de dano. HP jogador: ${this.playerFighter.character.lifePoints}`);
-    
-    // Emitir evento de dano
-    this.emitCombatEvent({ 
-      type: 'damage', 
-      data: { amount: damage, target: 'player' } 
-    });
-    
-    this.notifyHPUpdate();
-  }
-
-  /**
-   * Executa turno especial
-   */
-  executeSpecialTurn(): void {
-    console.log('Executando turno especial');
-    
-    if (!this.playerFighter || !this.enemyFighter) {
-      console.error('Fighters não inicializados');
-      return;
-    }
-
-    // Simular dano do golpe especial (15-30 de dano)
-    const damage = Math.floor(Math.random() * 16) + 15;
-    
-    // Aplicar dano ao inimigo
-    this.enemyFighter.character.lifePoints = Math.max(0, this.enemyFighter.character.lifePoints - damage);
-    this.enemyFighter.character.updatePercentageLife();
-    
-    console.log(`Golpe especial causou ${damage} de dano. HP inimigo: ${this.enemyFighter.character.lifePoints}`);
-    
-    // Emitir evento de dano
-    this.emitCombatEvent({ 
-      type: 'damage', 
-      data: { amount: damage, target: 'enemy' } 
-    });
-    
-    this.notifyHPUpdate();
-  }
-
-  /**
-   * Executa turno de poção
-   */
-  executePotionTurn(): void {
-    console.log('Executando turno de poção');
-    
-    if (!this.playerFighter || !this.enemyFighter) {
-      console.error('Fighters não inicializados');
-      return;
-    }
-
-    // Simular cura da poção (10-20 de cura)
-    const healing = Math.floor(Math.random() * 11) + 10;
-    const maxHP = this.playerFighter.character.totalLife;
-    
-    // Aplicar cura ao jogador
-    this.playerFighter.character.lifePoints = Math.min(maxHP, this.playerFighter.character.lifePoints + healing);
-    this.playerFighter.character.updatePercentageLife();
-    
-    console.log(`Poção curou ${healing} HP. HP jogador: ${this.playerFighter.character.lifePoints}/${maxHP}`);
-    
-    // Emitir evento de cura
-    this.emitCombatEvent({ 
-      type: 'heal', 
-      data: { amount: healing, target: 'player' } 
-    });
-    
-    this.notifyHPUpdate();
-  }
-
-  /**
-   * Define o total de rounds
-   */
-  setTotalRounds(rounds: number): void {
-    console.log(`Definindo total de rounds: ${rounds}`);
-    // Implementar lógica para definir rounds
-  }
-
-  /**
-   * Verifica se ainda pode lutar
-   */
-  canFight(): boolean {
-    return (this.playerFighter?.getCurrentHP() ?? 0) > 0 && (this.enemyFighter?.getCurrentHP() ?? 0) > 0;
-  }
-
-  /**
    * Destrói o jogo
    */
   destroyGame(): void {
-    console.log('Destruindo jogo');
+    console.log("Destruindo jogo");
     if (this.game) {
       this.game.destroy(true);
     }
@@ -279,18 +62,18 @@ export class CombatService extends Phaser.Scene {
    * Inicializa o jogo
    */
   initializeGame(container: PhaserContainer | HTMLElement): void {
-    console.log('Inicializando jogo');
-    
+    console.log("Inicializando jogo");
+
     // Determinar o elemento HTML correto
     let element: HTMLElement;
-    if ('nativeElement' in container && container.nativeElement) {
+    if ("nativeElement" in container && container.nativeElement) {
       element = container.nativeElement;
     } else if (container instanceof HTMLElement) {
       element = container;
     } else {
-      throw new Error('Container inválido fornecido para initializeGame');
+      throw new Error("Container inválido fornecido para initializeGame");
     }
-    
+
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
       width: element.clientWidth || 800,
@@ -298,14 +81,14 @@ export class CombatService extends Phaser.Scene {
       parent: element,
       scene: this,
       physics: {
-        default: 'arcade',
+        default: "arcade",
         arcade: {
           gravity: { y: 0, x: 0 },
-          debug: false
-        }
-      }
+          debug: false,
+        },
+      },
     };
-    
+
     this.game = new Phaser.Game(config);
   }
 
@@ -315,7 +98,8 @@ export class CombatService extends Phaser.Scene {
     this.load.image("background", "assets/cenario/cenario.001/mobile.png");
 
     // Carregar personagens para duelo
-    this.load.image("player-back", "assets/person/001/back.png"); // Jogador de costas
+    // String(numero).padStart(quantidadeDesejada, '0')
+    this.load.image("player-back", `assets/person/${"001"}/back.png`); // Jogador de costas
     this.load.image("opponent-front", "assets/person/002/main.png"); // Oponente de frente
   }
 
@@ -386,55 +170,45 @@ export class CombatService extends Phaser.Scene {
       return;
     }
 
-    // Dados do jogador - valores ajustados para combate equilibrado
-    const playerData: Character = {
-      level: 1,
-      strength: 2,
-      speed: 3,
-      resistance: 2, // Reduzido para permitir dano
-    };
-
-    // Dados do oponente - valores ajustados para combate equilibrado
-    const enemyData: Character = {
-      level: 1,
-      strength: 2,
-      speed: 3,
-      resistance: 2, // Reduzido para permitir dano
-      modifier: 1,
-    };
-
     // Instanciar personagens
     const playerCharacter = new CharacterHelper(playerData);
     const enemyCharacter = new CharacterHelper(enemyData);
 
     this.playerFighter = new FigtherHelper(playerCharacter);
     this.enemyFighter = new FigtherHelper(enemyCharacter);
+
+    console.log(this.playerFighter);
+
+    this.executeIniciative();
   }
 
   /**
-   * Obtém o jogador
+   * Iniciatva para ver quem começa
    */
-  getPlayer(): FigtherHelper | null {
-    return this.playerFighter;
+  executeIniciative() {
+    const inicitavePlayer = this.playerFighter?.initiative() || 0;
+    const inicitaveEnemy = this.enemyFighter?.initiative() || 0;
+
+    console.log(inicitavePlayer, inicitaveEnemy);
+    if (inicitavePlayer > inicitaveEnemy) {
+      this.playerInitiative$.next(true);
+      return;
+    }
+
+    if (inicitavePlayer < inicitaveEnemy) {
+      this.playerInitiative$.next(false);
+      return;
+    }
+
+    this.executeIniciative();
   }
 
   /**
-   * Obtém o oponente
+   * Retorna se o player começa
    */
-  getEnemy(): FigtherHelper | null {
-    return this.enemyFighter;
-  }
 
-  /**
-   * Configura callbacks para comunicação com outros serviços
-   */
-  setCallbacks(callbacks: {
-    hpUpdate?: () => void;
-    victory?: () => void;
-    defeat?: () => void;
-    nextTurn?: () => void;
-  }): void {
-    this.callbacks = callbacks;
+  getPlayerIniciative(): boolean {
+    return this.playerIniciative;
   }
 
   /**
@@ -442,48 +216,6 @@ export class CombatService extends Phaser.Scene {
    */
   getGameScene(): Phaser.Scene | null {
     return this as Phaser.Scene;
-  }
-
-  /**
-   * Emite um evento de combate tipado
-   */
-  private emitCombatEvent(event: CombatEvent): void {
-    this.combatEventSubject.next(event);
-  }
-
-  /**
-   * Notifica que as barras de HP precisam ser atualizadas
-   */
-  notifyHPUpdate(): void {
-    console.log("HP atualizado:");
-    console.log("Player HP:", this.playerFighter?.getCurrentHP());
-    console.log("Enemy HP:", this.enemyFighter?.getCurrentHP());
-
-    // Emitir atualização de HP através do observable
-    if (this.playerFighter && this.enemyFighter) {
-      this.hpUpdateSubject.next({
-        playerHP: this.playerFighter.getCurrentHP(),
-        playerMaxHP: this.playerFighter.getMaxHP(),
-        enemyHP: this.enemyFighter.getCurrentHP(),
-        enemyMaxHP: this.enemyFighter.getMaxHP()
-      });
-    }
-
-    if (this.callbacks.hpUpdate) {
-      this.callbacks.hpUpdate();
-    }
-
-    // Verificar se o jogo acabou
-    if (!this.canFight()) {
-      console.log("Jogo acabou!");
-      if (this.playerFighter?.getCurrentHP() === 0) {
-        this.emitDefeat();
-        this.emitCombatEvent({ type: 'defeat', data: { winner: 'enemy' } });
-      } else {
-        this.emitVictory();
-        this.emitCombatEvent({ type: 'victory', data: { winner: 'player' } });
-      }
-    }
   }
 
   /**

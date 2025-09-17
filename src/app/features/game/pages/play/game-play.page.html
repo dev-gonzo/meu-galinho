@@ -1,14 +1,13 @@
 <div #gameContainer class="game-container"></div>
 <app-marker />
 
-<app-intial-round
+<app-initiative
+  [playerIniciative]="playerInitiative"
+/>
+<!-- <app-intial-round
   *ngIf="showInitialRound"
   [roundNumber]="combatService.currentRound"
   (initiativeExecuted)="onInitiativeExecuted()"
-/>
-<app-initiative
-  *ngIf="showInitiative"
-  (initiativeFinished)="onInitiativeFinished()"
 />
 <app-fight-end 
   *ngIf="showFightEnd"
@@ -19,6 +18,6 @@
   *ngIf="showRoundEnd"
   [playerWon]="playerWonRound"
   (roundEndFinished)="onRoundEndFinished()"
-/>
+/> -->
 
 <app-control />

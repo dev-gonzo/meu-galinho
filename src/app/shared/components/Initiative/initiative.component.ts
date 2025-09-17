@@ -1,6 +1,13 @@
 import { CommonModule } from "@angular/common";
-import { Component, Input, Output, EventEmitter, inject, OnInit, ElementRef } from "@angular/core";
-import { CombatService } from "../../../features/game/services/combat-scene.service";
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+} from "@angular/core";
 
 @Component({
   selector: "app-initiative",
@@ -10,29 +17,28 @@ import { CombatService } from "../../../features/game/services/combat-scene.serv
   styleUrls: ["./initiative.component.scss"],
 })
 export class InitiativeComponent implements OnInit {
-  @Input() roundNumber = 1;
+  @Input() playerIniciative = true;
   @Output() initiativeFinished = new EventEmitter<void>();
-  
-  private readonly combatService = inject(CombatService);
+
   private readonly elementRef = inject(ElementRef);
   playerStarts = false;
 
   ngOnInit(): void {
     // Aplicar animação de entrada
-    this.elementRef.nativeElement.classList.add('zoom-in');
-    
+    this.elementRef.nativeElement.classList.add("zoom-in");
+
     // Verificar quem começa baseado na iniciativa
-    this.playerStarts = this.combatService.playerStarts;
-    
+    // this.playerStarts = this.combatService.playerStarts;
+
     // Fechar automaticamente após 1.2 segundos (deixando tempo para zoom out)
-    setTimeout(() => {
-      // Aplicar animação de zoom out
-      this.elementRef.nativeElement.classList.add('zoom-out');
-      
-      // Aguardar a animação terminar antes de emitir o evento
-      setTimeout(() => {
-        this.initiativeFinished.emit();
-      }, 300);
-    }, 1200);
+    // setTimeout(() => {
+    //   // Aplicar animação de zoom out
+    //   this.elementRef.nativeElement.classList.add('zoom-out');
+
+    //   // Aguardar a animação terminar antes de emitir o evento
+    //   setTimeout(() => {
+    //     this.initiativeFinished.emit();
+    //   }, 300);
+    // }, 1200);
   }
 }

@@ -8,12 +8,14 @@
   {
     "level": 6,
     "dice": 1,
-    "modifier": -3
+    "modifier": -3,
+    "damageMin": 1
   },
   {
     "level": 9,
     "dice": 1,
-    "modifier": -2
+    "modifier": -2,
+    "damageMin": 1
   },
   {
     "level": 12,
