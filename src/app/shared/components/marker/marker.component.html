@@ -44,28 +44,28 @@
             <div
               class="progress"
               role="progressbar"
-              aria-label="Enemy HP"
-              [attr.aria-valuenow]="enemyHPPercentage"
+              aria-label="Opponent HP"
+              [attr.aria-valuenow]="opponentHPPercentage"
               aria-valuemin="0"
               aria-valuemax="100"
-              [style.width.%]="enemyHPPercentage"
+              [style.width.%]="opponentHPPercentage"
             >
               <div
                 class="progress-bar"
                 [ngClass]="{
-                  'bg-success': enemyHPPercentage > 25,
-                  'bg-danger': enemyHPPercentage <= 25
+                  'bg-success': opponentHPPercentage > 25,
+                  'bg-danger': opponentHPPercentage <= 25
                 }"
               ></div>
             </div>
             <div
               class="progress"
               role="progressbar"
-              aria-label="Enemy HP Lost"
-              [attr.aria-valuenow]="100 - enemyHPPercentage"
+              aria-label="Opponent HP Lost"
+              [attr.aria-valuenow]="100 - opponentHPPercentage"
               aria-valuemin="0"
               aria-valuemax="100"
-              [style.width.%]="100 - enemyHPPercentage"
+              [style.width.%]="100 - opponentHPPercentage"
             >
               <div class="progress-bar bg-transparent"></div>
             </div>

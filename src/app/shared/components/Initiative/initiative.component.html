@@ -6,12 +6,14 @@
   >
     <img
       *ngIf="playerIniciative"
+      [@zoomAnimation]="imageAnimationState"
       src="assets/elementos/voce-comeca.png"
       alt="Você começa!"
       width="300"
     />
     <img
       *ngIf="!playerIniciative"
+      [@zoomAnimation]="imageAnimationState"
       src="assets/elementos/oponente-comeca.png"
       alt="Seu oponente começa!"
       width="300"

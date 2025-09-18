@@ -1,7 +1,10 @@
 <div class="size-h">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-3 d-flex align-items-end">
+      <div
+        class="col-3 d-flex align-items-end"
+        [@zoomAnimation]="animationState"
+      >
         <button
           type="button"
           class="bg-transparent border-0"
@@ -11,12 +14,16 @@
         </button>
       </div>
 
-      <div class="col-9 d-flex justify-content-end align-items-end flex-column">
+      <div
+        class="col-9 d-flex justify-content-end align-items-end flex-column"
+        [@zoomAnimation]="animationState"
+      >
         <!-- Botões de teste para configurar rounds -->
-        <div class="rounds-config" style="margin-bottom: 10px; text-align: center;">
+        <div
+          class="rounds-config"
+          style="margin-bottom: 10px; text-align: center"
+        ></div>
 
-        </div>
-        
         <button
           type="button"
           class="bg-transparent border-0"
@@ -33,7 +40,11 @@
         >
           <img src="assets/elementos/soco.png" alt="Soco" width="80" />
         </button>
-        <button type="button" class="bg-transparent border-0" (click)="usePotion()">
+        <button
+          type="button"
+          class="bg-transparent border-0"
+          (click)="usePotion()"
+        >
           <img
             src="assets/elementos/pocao.png"
             alt="Poção"

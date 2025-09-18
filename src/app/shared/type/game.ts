@@ -6,18 +6,18 @@ export interface GameState {
   gameActive: boolean;
   sceneReady: boolean;
   playerRoundVictory: number;
-  enemyRoundVictory: number;
+  opponentRoundVictory: number;
+  totalRounds: number;
+  fightFinished: boolean;
   roundStarter: Fighter;
-  totalRounds: number; // 3 ou 5 rounds, padrão 3
-  fightFinished: boolean; // indica se a luta terminou
 }
 
 export interface InitiativeResult {
   playerRoll: number;
-  enemyRoll: number;
-  winner: "player" | "enemy";
+  opponentRoll: number;
+  winner: "player" | "opponent";
   playerDiceValues?: number[];
-  enemyDiceValues?: number[];
+  opponentDiceValues?: number[];
 }
 
 export interface CustomGameScene extends Phaser.Scene {

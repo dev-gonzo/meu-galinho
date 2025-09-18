@@ -15,10 +15,10 @@ export class MarkerComponent implements OnInit, OnDestroy {
   private readonly combatService = inject(CombatService);
 
   public playerFighter: FigtherHelper | null = null;
-  public enemyFighter: FigtherHelper | null = null;
+  public opponentFighter: FigtherHelper | null = null;
 
   public playerHPPercentage = 100;
-  public enemyHPPercentage = 100;
+  public opponentHPPercentage = 100;
   public currentRound = 1;
   public currentTurn = 1;
 
@@ -80,16 +80,16 @@ export class MarkerComponent implements OnInit, OnDestroy {
   private updateHPPercentagesFromData(hpData: {
     playerHP: number;
     playerMaxHP: number;
-    enemyHP: number;
-    enemyMaxHP: number;
+    opponentHP: number;
+    opponentMaxHP: number;
   }): void {
     this.playerHPPercentage = Math.max(
       0,
       (hpData.playerHP / hpData.playerMaxHP) * 100
     );
-    this.enemyHPPercentage = Math.max(
+    this.opponentHPPercentage = Math.max(
       0,
-      (hpData.enemyHP / hpData.enemyMaxHP) * 100
+      (hpData.opponentHP / hpData.opponentMaxHP) * 100
     );
   }
 

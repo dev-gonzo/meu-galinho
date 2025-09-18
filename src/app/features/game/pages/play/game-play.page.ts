@@ -9,9 +9,12 @@ import {
   inject,
 } from "@angular/core";
 import { ControlComponent } from "../../../../shared/components/control/control.component";
-import { InitiativeComponent } from "../../../../shared/components/initiative/initiative.component";
+import { InitialRoundComponent } from "../../../../shared/components/initial-round/initial-round.component";
 import { MarkerComponent } from "../../../../shared/components/marker/marker.component";
 import { CombatService } from "../../services/combat-scene.service";
+import { GameState } from "../../../../shared/type/game";
+import { InitiativeComponent } from "../../../../shared/components/initiative/initiative.component";
+import { ChooseScamComponent } from "../../../../shared/components/choose-scam/choose-scam.component";
 
 @Component({
   selector: "app-game-play",
@@ -20,10 +23,9 @@ import { CombatService } from "../../services/combat-scene.service";
     CommonModule,
     MarkerComponent,
     ControlComponent,
-    // InitialRoundComponent,
+    InitialRoundComponent,
     InitiativeComponent,
-    // RoundEndComponent,
-    // FightEndComponent,
+    ChooseScamComponent,
   ],
   templateUrl: "./game-play.page.html",
   styleUrls: ["./game-play.page.scss"],
@@ -34,12 +36,24 @@ export class GamePlayPage implements AfterViewInit, OnDestroy {
   readonly combatService = inject(CombatService);
   private readonly cdr = inject(ChangeDetectorRef);
 
-  playerInitiative = true;
+  gameState: GameState = {
+    currentRound: 0,
+    currentTurn: 0,
+    gameActive: false,
+    sceneReady: false,
+    playerRoundVictory: 0,
+    opponentRoundVictory: 0,
+    totalRounds: 0,
+    fightFinished: false,
+    roundStarter: "PLAYER",
+  };
 
   // Propriedades para controle dos componentes de round
   showInitialRound = true;
   showInitiative = false;
   showRoundEnd = false;
+  showChooseScam = false;
+  showControl = false;
   playerWonRound = false;
 
   // Propriedades para controle do fim de luta
@@ -52,8 +66,8 @@ export class GamePlayPage implements AfterViewInit, OnDestroy {
       this.initGameViaService();
     }, 200);
 
-    this.combatService.getPlayerInitiativeObs().subscribe((value) => {
-      this.playerInitiative = value;
+    this.combatService.getGameStateObs().subscribe((value) => {
+      this.gameState = value;
       this.cdr.detectChanges();
     });
   }
@@ -72,5 +86,32 @@ export class GamePlayPage implements AfterViewInit, OnDestroy {
     } catch {
       // Erro ao inicializar jogo via CombatService
     }
+  }
+
+  /**
+   * Inicializa round
+   */
+  toogleRound() {
+    console.log("start round");
+    this.combatService.executeIniciative();
+    this.showInitiative = true;
+    this.showInitialRound = false;
+  }
+
+  /**
+   * Fecha estatista
+   */
+  toogleInitative() {
+    console.log("Close initiative");
+    this.showInitiative = false;
+    this.showControl = true;
+  }
+
+  /**
+   * Fecha estatista
+   */
+  toogleChooseScam() {
+    console.log("Abre Listga de gopes");
+    this.showChooseScam = true;
   }
 }

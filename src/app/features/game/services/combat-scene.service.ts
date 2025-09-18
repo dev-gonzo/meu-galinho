@@ -5,8 +5,9 @@ import { CharacterHelper } from "../../../shared/helpers/character.helper";
 import { FigtherHelper } from "../../../shared/helpers/fighter.helpers";
 import { PhaserContainer } from "../../../shared/type/PhaserContainer";
 
-import enemyData from "../../../shared/data/character-enemy.json";
+import opponentData from "../../../shared/data/character-opponent.json";
 import playerData from "../../../shared/data/character-players.json";
+import { GameState } from "../../../shared/type/game";
 
 /**
  * Classe unificada que combina Phaser.Scene e serviço Angular de combate
@@ -15,37 +16,40 @@ import playerData from "../../../shared/data/character-players.json";
   providedIn: "root",
 })
 export class CombatService extends Phaser.Scene {
+  constructor() {
+    super({ key: "CombatScene" });
+  }
+
   // Propriedades do Phaser
   public override game!: Phaser.Game;
   private background!: Phaser.GameObjects.Image;
 
-  private playerInitiative$ = new BehaviorSubject<boolean>(false);
-
-  getPlayerInitiativeObs() {
-    return this.playerInitiative$.asObservable();
-  }
-
   // Propriedades de combate
   private playerFighter: FigtherHelper | null = null;
-  private enemyFighter: FigtherHelper | null = null;
-  // private currentRound: number = 1;
-  // private currentTurn: number = 1;
-  // private gameActive: boolean = false;
-  // private sceneReady: boolean = false;
-  // private playerRoundVictory: number = 0;
-  // private enemyRoundVictory: number = 0;
-  // private totalRounds: number = 3;
-  // private fightFinished: boolean = false;
-  private playerIniciative = false;
+  private playerSprite!: Phaser.GameObjects.Image;
 
-  // Estado atual do jogo
-  public currentGameState = {
+  private opponentFighter: FigtherHelper | null = null;
+  private opponentSprite!: Phaser.GameObjects.Image;
+
+  private gameState: GameState = {
+    currentRound: 1,
+    currentTurn: 1,
     fightFinished: false,
-    winner: null as string | null,
+    gameActive: false,
+    opponentRoundVictory: 0,
+    playerRoundVictory: 0,
+    roundStarter: "PLAYER",
+    sceneReady: false,
+    totalRounds: 3,
   };
 
-  constructor() {
-    super({ key: "CombatScene" });
+  private gameState$ = new BehaviorSubject<GameState>(this.gameState);
+
+  /**
+   * Observable do estado jogo
+   */
+  getGameStateObs() {
+    return this.gameState$.asObservable();
   }
 
   /**
@@ -130,14 +134,18 @@ export class CombatService extends Phaser.Scene {
     // Jogador (de costas) - posição inferior esquerda
     const playerX = screenWidth * 0.25; // 25% da largura
     const playerY = screenHeight * 0.75; // 75% da altura (parte inferior)
-    const player = this.add.image(playerX, playerY, "player-back");
-    player.setScale(0.9); // Ajustar tamanho para mobile
+    this.playerSprite = this.add.image(playerX, playerY, "player-back");
+    this.playerSprite.setScale(0.9); // Ajustar tamanho para mobile
 
     // Oponente (de frente) - posição superior direita
     const opponentX = screenWidth * 0.75; // 75% da largura
     const opponentY = screenHeight * 0.35; // 35% da altura (parte superior)
-    const opponent = this.add.image(opponentX, opponentY, "opponent-front");
-    opponent.setScale(0.9); // Ajustar tamanho para mobile
+    this.opponentSprite = this.add.image(
+      opponentX,
+      opponentY,
+      "opponent-front"
+    );
+    this.opponentSprite.setScale(0.9); // Ajustar tamanho para mobile
 
     // Listener para redimensionamento
     this.scale.on("resize", () => {
@@ -148,10 +156,16 @@ export class CombatService extends Phaser.Scene {
       const newScreenHeight = this.scale.height;
 
       // Reposicionar jogador
-      player.setPosition(newScreenWidth * 0.25, newScreenHeight * 0.75);
+      this.playerSprite.setPosition(
+        newScreenWidth * 0.25,
+        newScreenHeight * 0.75
+      );
 
       // Reposicionar oponente
-      opponent.setPosition(newScreenWidth * 0.75, newScreenHeight * 0.35);
+      this.opponentSprite.setPosition(
+        newScreenWidth * 0.75,
+        newScreenHeight * 0.35
+      );
     });
 
     // Iniciar loop de animações de demonstração
@@ -166,18 +180,16 @@ export class CombatService extends Phaser.Scene {
    */
   initializeCombat(): void {
     // Verificar se já foi inicializado para evitar múltiplas execuções
-    if (this.playerFighter && this.enemyFighter) {
+    if (this.playerFighter && this.opponentFighter) {
       return;
     }
 
     // Instanciar personagens
     const playerCharacter = new CharacterHelper(playerData);
-    const enemyCharacter = new CharacterHelper(enemyData);
+    const opponentCharacter = new CharacterHelper(opponentData);
 
     this.playerFighter = new FigtherHelper(playerCharacter);
-    this.enemyFighter = new FigtherHelper(enemyCharacter);
-
-    console.log(this.playerFighter);
+    this.opponentFighter = new FigtherHelper(opponentCharacter);
 
     this.executeIniciative();
   }
@@ -187,16 +199,23 @@ export class CombatService extends Phaser.Scene {
    */
   executeIniciative() {
     const inicitavePlayer = this.playerFighter?.initiative() || 0;
-    const inicitaveEnemy = this.enemyFighter?.initiative() || 0;
+    const inicitaveOpponent = this.opponentFighter?.initiative() || 0;
 
-    console.log(inicitavePlayer, inicitaveEnemy);
-    if (inicitavePlayer > inicitaveEnemy) {
-      this.playerInitiative$.next(true);
+    if (inicitavePlayer > inicitaveOpponent) {
+      this.gameState = {
+        ...this.gameState,
+        roundStarter: "PLAYER",
+      };
+      this.gameState$.next(this.gameState);
       return;
     }
 
-    if (inicitavePlayer < inicitaveEnemy) {
-      this.playerInitiative$.next(false);
+    if (inicitavePlayer < inicitaveOpponent) {
+      this.gameState = {
+        ...this.gameState,
+        roundStarter: "OPPONENT",
+      };
+      this.gameState$.next(this.gameState);
       return;
     }
 
@@ -208,7 +227,7 @@ export class CombatService extends Phaser.Scene {
    */
 
   getPlayerIniciative(): boolean {
-    return this.playerIniciative;
+    return this.gameState.roundStarter == "PLAYER";
   }
 
   /**
@@ -221,38 +240,37 @@ export class CombatService extends Phaser.Scene {
   /**
    * Método para mostrar números de dano flutuantes
    */
-  showDamage(x: number, y: number, damage: number, isPlayer = false): void {
+  showDamage(damage: number, isPlayer = false): void {
     if (damage <= 0) return;
 
-    // Criar texto de dano
-    const damageText = this.add.text(x, y, `-${damage}`, {
-      fontSize: "32px",
+    // Pegar sprite de referência
+    const targetSprite = isPlayer ? this.playerSprite : this.opponentSprite;
+
+    if (!targetSprite) return;
+
+    // Coordenadas baseadas no centro do sprite
+    const { x, y } = targetSprite.getCenter();
+
+    const damageText = this.add.text(x, y - 140 * 0.5, `-${damage}`, {
+      fontSize: "24px",
       color: isPlayer ? "#ff4444" : "#ffaa00",
       fontStyle: "bold",
       stroke: "#000000",
       strokeThickness: 3,
     });
 
-    // Centralizar o texto
-    damageText.setOrigin(0.5, 0.5);
+    damageText.setOrigin(0.5, 0.2); // centralizado embaixo
 
-    // Posição inicial aleatória (centralizada com pequena variação)
-    const randomOffsetX = (Math.random() - 0.5) * 60; // Variação de -30 a +30
-    damageText.x = x + randomOffsetX;
-
-    // Animação de subida e fade-out
+    // Animação
     this.tweens.add({
       targets: damageText,
-      y: y - 180, // Sobe 120 pixels
-      alpha: 0, // Fade-out
-      duration: 1500, // 1.5 segundos
+      y: damageText.y - 50,
+      alpha: 0,
+      duration: 1500,
       ease: "Power2",
-      onComplete: () => {
-        damageText.destroy(); // Remove o texto após a animação
-      },
+      onComplete: () => damageText.destroy(),
     });
 
-    // Animação adicional de escala para dar mais impacto
     this.tweens.add({
       targets: damageText,
       scaleX: 1.2,
@@ -268,34 +286,17 @@ export class CombatService extends Phaser.Scene {
    */
   startDamageLoop(): void {
     const showRandomDamage = (): void => {
-      const screenWidth = this.scale.width;
-      const screenHeight = this.scale.height;
-
-      // Alternar entre jogador e inimigo
       const isPlayer = Math.random() < 0.5;
-      const damage = Math.floor(Math.random() * 50) + 10; // Dano entre 10-59
-
-      if (isPlayer) {
-        // Posição do jogador
-        const playerX = screenWidth * 0.24;
-        const playerY = screenWidth * 1.7;
-        this.showDamage(playerX, playerY - 50, damage, true);
-      } else {
-        // Posição do inimigo
-        const opponentX = screenWidth * 0.7;
-        const opponentY = screenHeight * 0.45;
-        this.showDamage(opponentX, opponentY - 50, damage, false);
-      }
+      const damage = Math.floor(Math.random() * 50) + 10;
+      this.showDamage(damage, isPlayer);
     };
 
-    // Mostrar dano a cada 2 segundos
     this.time.addEvent({
       delay: 2000,
       callback: showRandomDamage,
       loop: true,
     });
 
-    // Mostrar primeiro dano imediatamente
     showRandomDamage();
   }
 }

@@ -8,19 +8,19 @@ import {
 import { CommonModule } from "@angular/common";
 import {
   Component,
+  ElementRef,
   EventEmitter,
+  inject,
   Input,
-  OnInit,
   Output
 } from "@angular/core";
-import { Fighter } from "../../type/fighter";
 
 @Component({
-  selector: "app-initiative",
+  selector: "app-choose-scam",
   standalone: true,
   imports: [CommonModule],
-  templateUrl: "./initiative.component.html",
-  styleUrls: ["./initiative.component.scss"],
+  templateUrl: "./choose-scam.component.html",
+  styleUrls: ["./choose-scam.component.scss"],
   animations: [
     trigger("zoomAnimation", [
       state(
@@ -50,27 +50,27 @@ import { Fighter } from "../../type/fighter";
     ]),
   ],
 })
-export class InitiativeComponent implements OnInit {
-  @Input() roundStarter: Fighter = "PLAYER";
+export class ChooseScamComponent {
+  @Input() playerIniciative = true;
   @Output() toogleInitiative = new EventEmitter<void>();
 
-  playerIniciative = true;
+  private readonly elementRef = inject(ElementRef);
   playerStarts = false;
+
   imageAnimationState = "in";
 
-  ngOnInit(): void {
-    // Seta se o player incia o round
-    this.playerIniciative = this.roundStarter == "PLAYER";
+  // ngOnInit(): void {
+  //   // A animação de entrada acontece automaticamente com o estado 'in'
 
-    // Fechar automaticamente após 2 segundos (tempo para apreciar a animação)
-    setTimeout(() => {
-      // Aplicar animação de saída
-      this.imageAnimationState = "out";
+  //   // Fechar automaticamente após 2 segundos (tempo para apreciar a animação)
+  //   // setTimeout(() => {
+  //   //   // Aplicar animação de saída
+  //   //   this.imageAnimationState = "out";
 
-      // Aguardar a animação de saída terminar antes de emitir o evento
-      setTimeout(() => {
-        this.toogleInitiative.emit();
-      }, 150); // Tempo da animação de saída
-    },800);
-  }
+  //   //   // Aguardar a animação de saída terminar antes de emitir o evento
+  //   //   setTimeout(() => {
+  //   //     this.toogleInitiative.emit();
+  //   //   }, 250); // Tempo da animação de saída
+  //   // }, 2000);
+  // }
 }

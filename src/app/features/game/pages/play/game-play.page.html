@@ -1,14 +1,22 @@
 <div #gameContainer class="game-container"></div>
 <app-marker />
 
+@if(showInitialRound){
+<app-intial-round
+  [roundNumber]="gameState.currentRound"
+  (toogleRound)="toogleRound()"
+/>
+} @if(showInitiative){
 <app-initiative
-  [playerIniciative]="playerInitiative"
+  [roundStarter]="gameState.roundStarter"
+  (toogleInitiative)="toogleInitative()"
+/>} @if(showChooseScam){
+<app-choose-scam
+  [playerIniciative]="showChooseScam"
+  (toogleInitiative)="toogleInitative()"
 />
-<!-- <app-intial-round
-  *ngIf="showInitialRound"
-  [roundNumber]="combatService.currentRound"
-  (initiativeExecuted)="onInitiativeExecuted()"
-/>
+}
+<!-- 
 <app-fight-end 
   *ngIf="showFightEnd"
   [result]="fightResult"
@@ -20,4 +28,6 @@
   (roundEndFinished)="onRoundEndFinished()"
 /> -->
 
+@if(showControl){
 <app-control />
+}

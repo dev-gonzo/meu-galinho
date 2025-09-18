@@ -18,10 +18,6 @@ export class FigtherHelper {
   lose = false;
 
   constructor(character: CharacterHelper) {
-    // Se receber uma instância de CharacterHelper, clona ela
-    // Se receber dados simples, cria uma nova instância
-
-    console.log(character)
     if (character instanceof CharacterHelper) {
       this.character = character.clone();
     } else {

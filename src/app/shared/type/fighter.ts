@@ -1,1 +1,1 @@
-export type Fighter = "PLAYER" | "ENEMY";
+export type Fighter = "PLAYER" | "OPPONENT";
