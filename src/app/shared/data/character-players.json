@@ -32,7 +32,7 @@
       "amount": -1
     },
     {
-      "name": "Esporar",
+      "name": "Esporear",
       "speedReducer": -3,
       "damage": -1,
       "amount": -1
@@ -41,7 +41,7 @@
       "name": "Empurrar",
       "speedReducer": -1,
       "damage": -3,
-      "amount": -1
+      "amount": 3
     }
   ]
 }

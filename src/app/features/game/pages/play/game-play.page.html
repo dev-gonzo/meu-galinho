@@ -12,8 +12,8 @@
   (toogleInitiative)="toogleInitative()"
 />} @if(showChooseScam){
 <app-choose-scam
-  [playerIniciative]="showChooseScam"
-  (toogleInitiative)="toogleInitative()"
+  [playerFighterCharacter]="playerFighter?.character || null"
+  (toogleChosseScam)="toogleChooseScam()"
 />
 }
 <!-- 
@@ -29,5 +29,5 @@
 /> -->
 
 @if(showControl){
-<app-control />
+<app-control (toogleChosseScam)="toogleChooseScam()" />
 }

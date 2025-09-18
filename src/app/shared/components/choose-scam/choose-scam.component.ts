@@ -12,8 +12,9 @@ import {
   EventEmitter,
   inject,
   Input,
-  Output
+  Output,
 } from "@angular/core";
+import { CharacterHelper } from "../../helpers/character.helper";
 
 @Component({
   selector: "app-choose-scam",
@@ -51,26 +52,25 @@ import {
   ],
 })
 export class ChooseScamComponent {
-  @Input() playerIniciative = true;
-  @Output() toogleInitiative = new EventEmitter<void>();
+  @Input() playerFighterCharacter: CharacterHelper | null = null;
+  @Output() toogleChosseScam = new EventEmitter<void>();
+
 
   private readonly elementRef = inject(ElementRef);
   playerStarts = false;
 
+
   imageAnimationState = "in";
 
-  // ngOnInit(): void {
-  //   // A animação de entrada acontece automaticamente com o estado 'in'
+  closeChosseScam() {
+    console.log("Close Chosse Scam");
+    this.imageAnimationState = "out";
+    
+    // Aguardar a animação de saída terminar antes de emitir o evento
+    setTimeout(() => {
+      this.toogleChosseScam.emit();
+    }, 250);
+  }
 
-  //   // Fechar automaticamente após 2 segundos (tempo para apreciar a animação)
-  //   // setTimeout(() => {
-  //   //   // Aplicar animação de saída
-  //   //   this.imageAnimationState = "out";
 
-  //   //   // Aguardar a animação de saída terminar antes de emitir o evento
-  //   //   setTimeout(() => {
-  //   //     this.toogleInitiative.emit();
-  //   //   }, 250); // Tempo da animação de saída
-  //   // }, 2000);
-  // }
 }

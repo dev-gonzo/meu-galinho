@@ -5,7 +5,7 @@ import {
   transition,
   trigger,
 } from "@angular/animations";
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, EventEmitter, inject, OnInit, Output } from "@angular/core";
 import { Router } from "@angular/router";
 import { CombatService } from "../../../features/game/services/combat-scene.service";
 
@@ -45,6 +45,8 @@ import { CombatService } from "../../../features/game/services/combat-scene.serv
   ],
 })
 export class ControlComponent implements OnInit {
+  @Output() toogleChosseScam = new EventEmitter<void>();
+
   private readonly combatService = inject(CombatService);
   private readonly router = inject(Router);
 
@@ -66,8 +68,9 @@ export class ControlComponent implements OnInit {
     }
   }
 
-  punch() {
-    // this.combatService.executePunchTurn();
+  openChosseScam() {
+    console.log("Open Chosse Scam");
+    this.toogleChosseScam.emit();
   }
 
   defend() {

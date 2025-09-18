@@ -71,6 +71,6 @@ export class InitiativeComponent implements OnInit {
       setTimeout(() => {
         this.toogleInitiative.emit();
       }, 150); // Tempo da animação de saída
-    },800);
+    }, 800);
   }
 }

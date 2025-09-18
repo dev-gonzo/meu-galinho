@@ -8,13 +8,14 @@ import {
   ViewChild,
   inject,
 } from "@angular/core";
+import { ChooseScamComponent } from "../../../../shared/components/choose-scam/choose-scam.component";
 import { ControlComponent } from "../../../../shared/components/control/control.component";
 import { InitialRoundComponent } from "../../../../shared/components/initial-round/initial-round.component";
-import { MarkerComponent } from "../../../../shared/components/marker/marker.component";
-import { CombatService } from "../../services/combat-scene.service";
-import { GameState } from "../../../../shared/type/game";
 import { InitiativeComponent } from "../../../../shared/components/initiative/initiative.component";
-import { ChooseScamComponent } from "../../../../shared/components/choose-scam/choose-scam.component";
+import { MarkerComponent } from "../../../../shared/components/marker/marker.component";
+import { FigtherHelper } from "../../../../shared/helpers/fighter.helpers";
+import { GameState } from "../../../../shared/type/game";
+import { CombatService } from "../../services/combat-scene.service";
 
 @Component({
   selector: "app-game-play",
@@ -48,6 +49,8 @@ export class GamePlayPage implements AfterViewInit, OnDestroy {
     roundStarter: "PLAYER",
   };
 
+  playerFighter: FigtherHelper | null = null;
+
   // Propriedades para controle dos componentes de round
   showInitialRound = true;
   showInitiative = false;
@@ -61,6 +64,9 @@ export class GamePlayPage implements AfterViewInit, OnDestroy {
   fightResult: "victory" | "defeat" = "victory";
 
   ngAfterViewInit(): void {
+    // Inicializar dados do combate primeiro
+    this.combatService.initializeCombatData();
+
     // Aguardar o DOM estar pronto e inicializar via CombatService
     setTimeout(() => {
       this.initGameViaService();
@@ -68,6 +74,12 @@ export class GamePlayPage implements AfterViewInit, OnDestroy {
 
     this.combatService.getGameStateObs().subscribe((value) => {
       this.gameState = value;
+      this.cdr.detectChanges();
+    });
+
+    this.combatService.getPlayerFighterObs().subscribe((value) => {
+      console.log('PlayerFighter recebido:', value);
+      this.playerFighter = value;
       this.cdr.detectChanges();
     });
   }
@@ -112,6 +124,6 @@ export class GamePlayPage implements AfterViewInit, OnDestroy {
    */
   toogleChooseScam() {
     console.log("Abre Listga de gopes");
-    this.showChooseScam = true;
+    this.showChooseScam = !this.showChooseScam;
   }
 }

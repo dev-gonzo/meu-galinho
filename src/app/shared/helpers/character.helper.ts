@@ -73,6 +73,11 @@ export class CharacterHelper {
     this.lifePoints = data.lifePoints ?? this.totalLife;
     this.percentageLifePoints = this.lifePoints / this.totalLife;
     this.knockdown = false;
+    
+    // Copiar scamsList se existir nos dados
+    if (data.scamsList && Array.isArray(data.scamsList)) {
+      this.scamsList = [...data.scamsList];
+    }
   }
 
   /**

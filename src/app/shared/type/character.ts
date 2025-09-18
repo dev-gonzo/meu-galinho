@@ -15,4 +15,10 @@ export interface Character {
   damageResistance?: number;
   totalLife?: number;
   lifePoints?: number;
+  scamsList?: {
+    name: string;
+    speedReducer: number;
+    damage: number;
+    amount: number;
+  }[];
 }

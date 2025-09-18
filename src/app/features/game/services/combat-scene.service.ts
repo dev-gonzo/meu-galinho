@@ -44,12 +44,27 @@ export class CombatService extends Phaser.Scene {
   };
 
   private gameState$ = new BehaviorSubject<GameState>(this.gameState);
+  private playerFighter$ = new BehaviorSubject<FigtherHelper | null>(null);
 
   /**
    * Observable do estado jogo
    */
   getGameStateObs() {
     return this.gameState$.asObservable();
+  }
+
+  /**
+   * Observable do player fighter
+   */
+  getPlayerFighterObs() {
+    return this.playerFighter$.asObservable();
+  }
+
+  /**
+   * Método público para inicializar o combate
+   */
+  public initializeCombatData(): void {
+    this.initializeCombat();
   }
 
   /**
@@ -133,7 +148,7 @@ export class CombatService extends Phaser.Scene {
 
     // Jogador (de costas) - posição inferior esquerda
     const playerX = screenWidth * 0.25; // 25% da largura
-    const playerY = screenHeight * 0.75; // 75% da altura (parte inferior)
+    const playerY = screenHeight * 0.60; // 75% da altura (parte inferior)
     this.playerSprite = this.add.image(playerX, playerY, "player-back");
     this.playerSprite.setScale(0.9); // Ajustar tamanho para mobile
 
@@ -169,7 +184,7 @@ export class CombatService extends Phaser.Scene {
     });
 
     // Iniciar loop de animações de demonstração
-    this.startDamageLoop();
+    // this.startDamageLoop();
 
     // Inicializar combate quando a cena estiver pronta
     this.initializeCombat();
@@ -190,6 +205,8 @@ export class CombatService extends Phaser.Scene {
 
     this.playerFighter = new FigtherHelper(playerCharacter);
     this.opponentFighter = new FigtherHelper(opponentCharacter);
+
+    this.playerFighter$.next(this.playerFighter);
 
     this.executeIniciative();
   }
@@ -284,19 +301,19 @@ export class CombatService extends Phaser.Scene {
   /**
    * Loop contínuo de animações de demonstração
    */
-  startDamageLoop(): void {
-    const showRandomDamage = (): void => {
-      const isPlayer = Math.random() < 0.5;
-      const damage = Math.floor(Math.random() * 50) + 10;
-      this.showDamage(damage, isPlayer);
-    };
+  // startDamageLoop(): void {
+  //   const showRandomDamage = (): void => {
+  //     const isPlayer = Math.random() < 0.5;
+  //     const damage = Math.floor(Math.random() * 50) + 10;
+  //     this.showDamage(damage, isPlayer);
+  //   };
 
-    this.time.addEvent({
-      delay: 2000,
-      callback: showRandomDamage,
-      loop: true,
-    });
+  //   this.time.addEvent({
+  //     delay: 2000,
+  //     callback: showRandomDamage,
+  //     loop: true,
+  //   });
 
-    showRandomDamage();
-  }
+  //   showRandomDamage();
+  // }
 }
