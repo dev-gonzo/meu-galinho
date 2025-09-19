@@ -11,8 +11,10 @@ import {
   ElementRef,
   EventEmitter,
   inject,
+  OnInit,
   Output
 } from "@angular/core";
+import { SoundService } from "../../services/sound.service";
 
 @Component({
   selector: "app-to-give-up",
@@ -49,18 +51,28 @@ import {
     ]),
   ],
 })
-export class GoGiveUpComponent {
+export class GoGiveUpComponent implements OnInit {
   @Output() toogleGoGiveUp = new EventEmitter<void>();
 
 
   private readonly elementRef = inject(ElementRef);
+  private readonly soundService = inject(SoundService);
   playerStarts = false;
 
 
   imageAnimationState = "in";
 
+  ngOnInit(): void {
+    // Reproduz o som de entrada quando o componente é inicializado
+    this.soundService.playEntrance();
+  }
+
   closeGoGiveUp() {
     console.log("Close Defender");
+    
+    // Reproduz o som de saída quando o componente é fechado
+    this.soundService.playExit();
+    
     this.imageAnimationState = "out";
     
     // Aguardar a animação de saída terminar antes de emitir o evento

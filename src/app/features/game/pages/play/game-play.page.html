@@ -15,6 +15,16 @@
   [playerFighterCharacter]="playerFighter?.character || null"
   (toogleChosseScam)="toogleChooseScam()"
 />
+} @if(showSpecial){
+<app-special
+  [playerFighterCharacter]="playerFighter?.character || null"
+  (toogleSpecial)="toogleSpecial()"
+/>
+} @if(showPotion){
+<app-potion
+  [playerFighterCharacter]="playerFighter?.character || null"
+  (tooglePotion)="tooglePotion()"
+/>
 } @if(showDefender){
 <app-defender (toogleDefender)="toogleDefender()" />
 } @if(showToGiveUp){
@@ -36,6 +46,8 @@
 <app-control
   (toogleChosseScam)="toogleChooseScam()"
   (toogleDefender)="toogleDefender()"
+  (tooglePotion)="tooglePotion()"
+  (toogleSpecial)="toogleSpecial()"
   (toogleGoGiveUp)="toogleGoGiveUp()"
 />
 }

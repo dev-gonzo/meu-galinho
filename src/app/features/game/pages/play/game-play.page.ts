@@ -10,14 +10,17 @@ import {
 } from "@angular/core";
 import { ChooseScamComponent } from "../../../../shared/components/choose-scam/choose-scam.component";
 import { ControlComponent } from "../../../../shared/components/control/control.component";
+import { DefenderComponent } from "../../../../shared/components/defender/defender.component";
 import { InitialRoundComponent } from "../../../../shared/components/initial-round/initial-round.component";
 import { InitiativeComponent } from "../../../../shared/components/initiative/initiative.component";
 import { MarkerComponent } from "../../../../shared/components/marker/marker.component";
+import { PotionComponent } from "../../../../shared/components/potion/potion.component";
+import { GoGiveUpComponent } from "../../../../shared/components/to-give-up/to-give-up.component";
 import { FigtherHelper } from "../../../../shared/helpers/fighter.helpers";
+import { BackgroundMusicService } from "../../../../shared/services/background-music.service";
 import { GameState } from "../../../../shared/type/game";
 import { CombatService } from "../../services/combat-scene.service";
-import { DefenderComponent } from "../../../../shared/components/defender/defender.component";
-import { GoGiveUpComponent } from "../../../../shared/components/to-give-up/to-give-up.component";
+import { SpecialComponent } from "../../../../shared/components/special/special.component";
 
 @Component({
   selector: "app-game-play",
@@ -30,7 +33,9 @@ import { GoGiveUpComponent } from "../../../../shared/components/to-give-up/to-g
     InitiativeComponent,
     ChooseScamComponent,
     DefenderComponent,
-    GoGiveUpComponent
+    GoGiveUpComponent,
+    PotionComponent,
+    SpecialComponent,
   ],
   templateUrl: "./game-play.page.html",
   styleUrls: ["./game-play.page.scss"],
@@ -40,6 +45,9 @@ export class GamePlayPage implements AfterViewInit, OnDestroy {
 
   readonly combatService = inject(CombatService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly backgroundMusicService = inject(BackgroundMusicService);
+
+  private musicStarted = false;
 
   gameState: GameState = {
     currentRound: 0,
@@ -67,6 +75,8 @@ export class GamePlayPage implements AfterViewInit, OnDestroy {
   showControl = false;
   showDefender = false;
   showToGiveUp = false;
+  showPotion = false;
+  showSpecial = false;
   playerWonRound = false;
 
   // Propriedades para controle do fim de luta
@@ -76,6 +86,9 @@ export class GamePlayPage implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     // Inicializar dados do combate primeiro
     this.combatService.initializeCombatData();
+
+    // Iniciar música de fundo
+    this.startBackgroundMusic();
 
     // Aguardar o DOM estar pronto e inicializar via CombatService
     setTimeout(() => {
@@ -111,9 +124,36 @@ export class GamePlayPage implements AfterViewInit, OnDestroy {
   }
 
   /**
+   * Inicia a música de fundo
+   */
+  private startBackgroundMusic(): void {
+    if (!this.musicStarted) {
+      try {
+        this.backgroundMusicService.play(0, false); // Inicia a primeira música em loop com shouldPlay = true
+        this.musicStarted = true;
+      } catch {
+        // Se falhar (por exemplo, por política de autoplay), será tentado novamente na primeira interação
+        console.log(
+          "Música de fundo será iniciada na primeira interação do usuário"
+        );
+      }
+    }
+  }
+
+  /**
+   * Garante que a música seja iniciada na primeira interação do usuário
+   */
+  private ensureBackgroundMusic(): void {
+    if (!this.musicStarted) {
+      this.startBackgroundMusic();
+    }
+  }
+
+  /**
    * Inicializa round
    */
   toogleRound() {
+    this.ensureBackgroundMusic();
     console.log("start round");
     this.combatService.executeIniciative();
     this.showInitiative = true;
@@ -124,6 +164,7 @@ export class GamePlayPage implements AfterViewInit, OnDestroy {
    * Fecha estatista
    */
   toogleInitative() {
+    this.ensureBackgroundMusic();
     console.log("Close initiative");
     this.showInitiative = false;
     this.showControl = true;
@@ -133,6 +174,7 @@ export class GamePlayPage implements AfterViewInit, OnDestroy {
    * Toogle estatista
    */
   toogleChooseScam() {
+    this.ensureBackgroundMusic();
     console.log("Abre Lista de gopes");
     this.showChooseScam = !this.showChooseScam;
     this.showControl = !this.showControl;
@@ -142,6 +184,7 @@ export class GamePlayPage implements AfterViewInit, OnDestroy {
    * Toogle Defender
    */
   toogleDefender() {
+    this.ensureBackgroundMusic();
     console.log("Abre Defesa");
     this.showDefender = !this.showDefender;
     this.showControl = !this.showControl;
@@ -151,8 +194,29 @@ export class GamePlayPage implements AfterViewInit, OnDestroy {
    * Toogle Fugir
    */
   toogleGoGiveUp() {
+    this.ensureBackgroundMusic();
     console.log("Abre Fugir");
     this.showToGiveUp = !this.showToGiveUp;
+    this.showControl = !this.showControl;
+  }
+
+  /**
+   * Toogle Poção
+   */
+  tooglePotion() {
+    this.ensureBackgroundMusic();
+    console.log("Abre Poção");
+    this.showPotion = !this.showPotion;
+    this.showControl = !this.showControl;
+  }
+
+  /**
+   * Toogle Especial
+   */
+  toogleSpecial() {
+    this.ensureBackgroundMusic();
+    console.log("1Abre Especial");
+    this.showSpecial = !this.showSpecial;
     this.showControl = !this.showControl;
   }
 }

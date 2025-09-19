@@ -6,6 +6,7 @@ export const GAME_ROUTES: Routes = [
   {
     path: 'game',
     component: LayoutMainComponent,
+
     children: [
       {
         path: 'play',

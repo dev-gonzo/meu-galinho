@@ -6,8 +6,15 @@ import {
   trigger,
 } from "@angular/animations";
 import { CommonModule } from "@angular/common";
-import { Component, EventEmitter, inject, Input, Output } from "@angular/core";
-import { CombatService } from "../../../features/game/services/combat-scene.service";
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+} from "@angular/core";
+import { SoundService } from "../../services/sound.service";
 
 @Component({
   selector: "app-intial-round",
@@ -44,17 +51,36 @@ import { CombatService } from "../../../features/game/services/combat-scene.serv
     ]),
   ],
 })
-export class InitialRoundComponent {
+export class InitialRoundComponent implements OnInit {
   @Input() roundNumber = 1;
   @Output() toogleRound = new EventEmitter<void>();
 
   imageAnimationState = "in";
   buttonAnimationState = "in";
 
-  private readonly combatService = inject(CombatService);
+  private soundService = inject(SoundService);
+
+  ngOnInit(): void {
+    // Reproduz o som de entrada quando o componente é inicializado
+    this.soundService.playEntrance(10);
+  }
 
   startRound(): void {
     // this.combatService.initialRound();
+
+    // Aplicar animação de zoom out
+    this.imageAnimationState = "out";
+    this.buttonAnimationState = "out";
+
+    // Aguardar a animação terminar antes de emitir o evento
+    setTimeout(() => {
+      this.toogleRound.emit();
+    }, 150);
+  }
+
+  closeComponent(): void {
+    // Reproduz o som de saída quando o usuário clica no botão de fechar
+    this.soundService.playExit();
 
     // Aplicar animação de zoom out
     this.imageAnimationState = "out";

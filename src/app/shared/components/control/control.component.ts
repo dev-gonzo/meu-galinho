@@ -48,6 +48,8 @@ export class ControlComponent implements OnInit {
   @Output() toogleChosseScam = new EventEmitter<void>();
   @Output() toogleDefender = new EventEmitter<void>();
   @Output() toogleGoGiveUp = new EventEmitter<void>();
+  @Output() tooglePotion = new EventEmitter<void>();
+  @Output() toogleSpecial = new EventEmitter<void>();
 
   private readonly combatService = inject(CombatService);
   private readonly router = inject(Router);
@@ -78,10 +80,10 @@ export class ControlComponent implements OnInit {
   }
 
   special() {
-    // this.combatService.executeSpecialTurn();
+    this.toogleSpecial.emit();
   }
 
-  usePotion() {
-    // this.combatService.executePotionTurn();
+  potion() {
+    this.tooglePotion.emit();
   }
 }

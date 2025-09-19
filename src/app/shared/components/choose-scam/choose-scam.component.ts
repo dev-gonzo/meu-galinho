@@ -12,9 +12,11 @@ import {
   EventEmitter,
   inject,
   Input,
+  OnInit,
   Output,
 } from "@angular/core";
 import { CharacterHelper } from "../../helpers/character.helper";
+import { SoundService } from "../../services/sound.service";
 
 @Component({
   selector: "app-choose-scam",
@@ -51,20 +53,29 @@ import { CharacterHelper } from "../../helpers/character.helper";
     ]),
   ],
 })
-export class ChooseScamComponent {
+export class ChooseScamComponent implements OnInit {
   @Input() playerFighterCharacter: CharacterHelper | null = null;
   @Output() toogleChosseScam = new EventEmitter<void>();
 
 
   private readonly elementRef = inject(ElementRef);
+  private readonly soundService = inject(SoundService);
   playerStarts = false;
 
 
   imageAnimationState = "in";
 
+  ngOnInit(): void {
+    // Reproduz som de entrada quando o componente é inicializado
+    this.soundService.playEntrance();
+  }
+
   closeChosseScam() {
     console.log("Close Chosse Scam");
     this.imageAnimationState = "out";
+    
+    // Reproduz som de saída
+    this.soundService.playExit();
     
     // Aguardar a animação de saída terminar antes de emitir o evento
     setTimeout(() => {

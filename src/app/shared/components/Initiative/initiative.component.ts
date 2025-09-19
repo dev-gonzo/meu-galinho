@@ -11,9 +11,11 @@ import {
   EventEmitter,
   Input,
   OnInit,
-  Output
+  Output,
+  inject
 } from "@angular/core";
 import { Fighter } from "../../type/fighter";
+import { SoundService } from "../../services/sound.service";
 
 @Component({
   selector: "app-initiative",
@@ -54,16 +56,24 @@ export class InitiativeComponent implements OnInit {
   @Input() roundStarter: Fighter = "PLAYER";
   @Output() toogleInitiative = new EventEmitter<void>();
 
+  private soundService = inject(SoundService);
+  
   playerIniciative = true;
   playerStarts = false;
   imageAnimationState = "in";
 
   ngOnInit(): void {
+    // Reproduz som de entrada (pickup)
+    this.soundService.playPickup();
+    
     // Seta se o player incia o round
     this.playerIniciative = this.roundStarter == "PLAYER";
 
     // Fechar automaticamente após 2 segundos (tempo para apreciar a animação)
     setTimeout(() => {
+      // Reproduz som de saída (pickup)
+      this.soundService.playPickup();
+      
       // Aplicar animação de saída
       this.imageAnimationState = "out";
 

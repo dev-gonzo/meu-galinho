@@ -1,0 +1,65 @@
+<div class="bg-dropback d-100 vh-100 d-flex justify-content-center">
+  <div class="d-flex flex-column justify-content-center align-items-center">
+    <img
+      [@zoomAnimation]="imageAnimationState"
+      src="assets/elementos/escolha-um-poder.png"
+      alt="Escolha uma poção"
+      width="300"
+    />
+    <div class="d-flex flex-column align-items-center">
+      @for (scam of playerFighterCharacter?.scamsList; track scam.name) {
+      <button
+        class="bg-transparent border-0 position-relative"
+        [@zoomAnimation]="imageAnimationState"
+      >
+        <img
+          src="assets/elementos/btn-blue.png"
+          alt="Botão de Poder"
+          width="300"
+        />
+        <span
+          class="position-absolute fw-bold d-flex justify-content-center align-items-center"
+          style="
+            top: 22px;
+            left: 25px;
+            color: #0d1f33;
+            height: 55px;
+            width: 175px;
+            overflow: hidden;
+          "
+        >
+          {{ scam.name }}
+        </span>
+
+        <span
+          class="position-absolute fw-bold d-flex justify-content-center align-items-center"
+          style="
+            font-size: 36px;
+            top: 24px;
+            left: 220px;
+            color: #fcebc5;
+            height: 57px;
+            width: 57px;
+            overflow: hidden;
+          "
+        >
+          {{ scam.amount === -1 ? "∞" : scam.amount }}
+        </span>
+      </button>
+      }
+
+      <button
+        class="bg-transparent border-0 d-flex justify-content-center align-items-center"
+        (click)="close()"
+        [@zoomAnimation]="imageAnimationState"
+      >
+        <img
+          src="assets/elementos/close.png"
+          class="mt-3"
+          alt="Fechar"
+          width="50"
+        />
+      </button>
+    </div>
+  </div>
+</div>
