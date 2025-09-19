@@ -6,12 +6,12 @@
       alt="Escolha um golpe"
       width="300"
     />
-    <div
-      class="d-flex flex-column align-items-center"
-      [@zoomAnimation]="imageAnimationState"
-    >
+    <div class="d-flex flex-column align-items-center">
       @for (scam of playerFighterCharacter?.scamsList; track scam.name) {
-      <button class="bg-transparent border-0 position-relative">
+      <button
+        class="bg-transparent border-0 position-relative"
+        [@zoomAnimation]="imageAnimationState"
+      >
         <img
           src="assets/elementos/btn-escolha-golpe.png"
           alt="Botão de Golpe"
@@ -51,6 +51,7 @@
       <button
         class="bg-transparent border-0 d-flex justify-content-center align-items-center"
         (click)="closeChosseScam()"
+        [@zoomAnimation]="imageAnimationState"
       >
         <img
           src="assets/elementos/close.png"

@@ -16,6 +16,8 @@ import { MarkerComponent } from "../../../../shared/components/marker/marker.com
 import { FigtherHelper } from "../../../../shared/helpers/fighter.helpers";
 import { GameState } from "../../../../shared/type/game";
 import { CombatService } from "../../services/combat-scene.service";
+import { DefenderComponent } from "../../../../shared/components/defender/defender.component";
+import { GoGiveUpComponent } from "../../../../shared/components/to-give-up/to-give-up.component";
 
 @Component({
   selector: "app-game-play",
@@ -27,6 +29,8 @@ import { CombatService } from "../../services/combat-scene.service";
     InitialRoundComponent,
     InitiativeComponent,
     ChooseScamComponent,
+    DefenderComponent,
+    GoGiveUpComponent
   ],
   templateUrl: "./game-play.page.html",
   styleUrls: ["./game-play.page.scss"],
@@ -44,6 +48,10 @@ export class GamePlayPage implements AfterViewInit, OnDestroy {
     sceneReady: false,
     playerRoundVictory: 0,
     opponentRoundVictory: 0,
+    playerLife: 0,
+    opponentLife: 0,
+    playerLifePercentage: 0,
+    opponentLifePercentage: 0,
     totalRounds: 0,
     fightFinished: false,
     roundStarter: "PLAYER",
@@ -57,6 +65,8 @@ export class GamePlayPage implements AfterViewInit, OnDestroy {
   showRoundEnd = false;
   showChooseScam = false;
   showControl = false;
+  showDefender = false;
+  showToGiveUp = false;
   playerWonRound = false;
 
   // Propriedades para controle do fim de luta
@@ -78,7 +88,7 @@ export class GamePlayPage implements AfterViewInit, OnDestroy {
     });
 
     this.combatService.getPlayerFighterObs().subscribe((value) => {
-      console.log('PlayerFighter recebido:', value);
+      console.log("PlayerFighter recebido:", value);
       this.playerFighter = value;
       this.cdr.detectChanges();
     });
@@ -120,10 +130,29 @@ export class GamePlayPage implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Fecha estatista
+   * Toogle estatista
    */
   toogleChooseScam() {
-    console.log("Abre Listga de gopes");
+    console.log("Abre Lista de gopes");
     this.showChooseScam = !this.showChooseScam;
+    this.showControl = !this.showControl;
+  }
+
+  /**
+   * Toogle Defender
+   */
+  toogleDefender() {
+    console.log("Abre Defesa");
+    this.showDefender = !this.showDefender;
+    this.showControl = !this.showControl;
+  }
+
+  /**
+   * Toogle Fugir
+   */
+  toogleGoGiveUp() {
+    console.log("Abre Fugir");
+    this.showToGiveUp = !this.showToGiveUp;
+    this.showControl = !this.showControl;
   }
 }

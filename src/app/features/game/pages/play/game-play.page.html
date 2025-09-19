@@ -15,9 +15,13 @@
   [playerFighterCharacter]="playerFighter?.character || null"
   (toogleChosseScam)="toogleChooseScam()"
 />
+} @if(showDefender){
+<app-defender (toogleDefender)="toogleDefender()" />
+} @if(showToGiveUp){
+<app-to-give-up (toogleGoGiveUp)="toogleGoGiveUp()" />
 }
-<!-- 
-<app-fight-end 
+
+<!-- <app-fight-end 
   *ngIf="showFightEnd"
   [result]="fightResult"
   (fightEndFinished)="onFightEndFinished()"
@@ -29,5 +33,9 @@
 /> -->
 
 @if(showControl){
-<app-control (toogleChosseScam)="toogleChooseScam()" />
+<app-control
+  (toogleChosseScam)="toogleChooseScam()"
+  (toogleDefender)="toogleDefender()"
+  (toogleGoGiveUp)="toogleGoGiveUp()"
+/>
 }

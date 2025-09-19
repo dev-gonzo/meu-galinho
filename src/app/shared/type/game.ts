@@ -7,6 +7,10 @@ export interface GameState {
   sceneReady: boolean;
   playerRoundVictory: number;
   opponentRoundVictory: number;
+  playerLife: number;
+  opponentLife: number;
+  playerLifePercentage: number;
+  opponentLifePercentage: number;
   totalRounds: number;
   fightFinished: boolean;
   roundStarter: Fighter;

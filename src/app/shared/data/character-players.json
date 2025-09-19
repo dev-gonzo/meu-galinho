@@ -35,7 +35,7 @@
       "name": "Esporear",
       "speedReducer": -3,
       "damage": -1,
-      "amount": -1
+      "amount": 5
     },
     {
       "name": "Empurrar",

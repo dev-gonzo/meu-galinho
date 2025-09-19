@@ -38,6 +38,10 @@ export class CombatService extends Phaser.Scene {
     gameActive: false,
     opponentRoundVictory: 0,
     playerRoundVictory: 0,
+    playerLife: 0,
+    opponentLife: 0,
+    playerLifePercentage: 100,
+    opponentLifePercentage: 100,
     roundStarter: "PLAYER",
     sceneReady: false,
     totalRounds: 3,
@@ -184,7 +188,7 @@ export class CombatService extends Phaser.Scene {
     });
 
     // Iniciar loop de animações de demonstração
-    // this.startDamageLoop();
+    this.startDamageLoop();
 
     // Inicializar combate quando a cena estiver pronta
     this.initializeCombat();
@@ -207,6 +211,9 @@ export class CombatService extends Phaser.Scene {
     this.opponentFighter = new FigtherHelper(opponentCharacter);
 
     this.playerFighter$.next(this.playerFighter);
+    
+    // Atualizar percentuais de vida iniciais
+    this.updateLifePercentages();
 
     this.executeIniciative();
   }
@@ -299,21 +306,37 @@ export class CombatService extends Phaser.Scene {
   }
 
   /**
+   * Atualiza os percentuais de vida dos fighters
+   */
+  private updateLifePercentages(): void {
+    if (this.playerFighter && this.opponentFighter) {
+      const playerPercentage = this.playerFighter.getHPPercentage();
+      const opponentPercentage = this.opponentFighter.getHPPercentage();
+      
+      this.gameState.playerLifePercentage = Math.max(0, Math.min(100, playerPercentage));
+      this.gameState.opponentLifePercentage = Math.max(0, Math.min(100, opponentPercentage));
+      
+      // Emitir o estado atualizado
+      this.gameState$.next({ ...this.gameState });
+    }
+  }
+
+  /**
    * Loop contínuo de animações de demonstração
    */
-  // startDamageLoop(): void {
-  //   const showRandomDamage = (): void => {
-  //     const isPlayer = Math.random() < 0.5;
-  //     const damage = Math.floor(Math.random() * 50) + 10;
-  //     this.showDamage(damage, isPlayer);
-  //   };
+  startDamageLoop(): void {
+    const showRandomDamage = (): void => {
+      const isPlayer = Math.random() < 0.5;
+      const damage = Math.floor(Math.random() * 50) + 10;
+      this.showDamage(damage, isPlayer);
+    };
 
-  //   this.time.addEvent({
-  //     delay: 2000,
-  //     callback: showRandomDamage,
-  //     loop: true,
-  //   });
+    this.time.addEvent({
+      delay: 2000,
+      callback: showRandomDamage,
+      loop: true,
+    });
 
-  //   showRandomDamage();
-  // }
+    showRandomDamage();
+  }
 }

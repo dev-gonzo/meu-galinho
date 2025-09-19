@@ -21,6 +21,7 @@ export class MarkerComponent implements OnInit, OnDestroy {
   public opponentHPPercentage = 100;
   public currentRound = 1;
   public currentTurn = 1;
+  public showLifeBars = false;
 
   private hpUpdateSubscription?: Subscription;
   private gameStateSubscription?: Subscription;
@@ -28,28 +29,19 @@ export class MarkerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Inicializar combate se ainda não foi inicializado
     this.combatService.initializeCombat();
-
-    // Obter referências dos personagens
-    // this.playerFighter = this.combatService.getPlayer();
-    // this.enemyFighter = this.combatService.getEnemy();
-
-    // Calcular porcentagens de HP
-    // this.updateHPPercentages();
-
-    // // Se inscrever para atualizações de HP
-    // this.hpUpdateSubscription = this.combatService.hpUpdate$.subscribe(
-    //   (hpData) => {
-    //     this.updateHPPercentagesFromData(hpData);
-    //   }
-    // );
-
-    // // Se inscrever para atualizações do estado do jogo (turno e round)
-    // this.gameStateSubscription = this.combatService.gameState$.subscribe(
-    //   (gameState) => {
-    //     this.currentRound = gameState.currentRound ?? 1;
-    //     this.currentTurn = gameState.currentTurn ?? 1;
-    //   }
-    // );
+    
+    // Inscrever-se no estado do jogo para receber atualizações de vida
+    this.gameStateSubscription = this.combatService.getGameStateObs().subscribe(gameState => {
+      this.playerHPPercentage = gameState.playerLifePercentage;
+      this.opponentHPPercentage = gameState.opponentLifePercentage;
+      this.currentRound = gameState.currentRound;
+      this.currentTurn = gameState.currentTurn;
+    });
+    
+    // Ativar animação das barras de vida após um pequeno delay
+    setTimeout(() => {
+      this.showLifeBars = true;
+    }, 500);
   }
 
   ngOnDestroy(): void {
@@ -57,43 +49,4 @@ export class MarkerComponent implements OnInit, OnDestroy {
     this.gameStateSubscription?.unsubscribe();
   }
 
-  // private updateHPPercentages(): void {
-  //   // Obter referências atualizadas dos personagens
- 
-
-  //   if (currentPlayer) {
-  //     const playerMaxHP = currentPlayer.getMaxHP();
-  //     const playerCurrentHP = currentPlayer.getCurrentHP();
-  //     this.playerHPPercentage = Math.max(
-  //       0,
-  //       (playerCurrentHP / playerMaxHP) * 100
-  //     );
-  //   }
-
-  //   if (currentEnemy) {
-  //     const enemyMaxHP = currentEnemy.getMaxHP();
-  //     const enemyCurrentHP = currentEnemy.getCurrentHP();
-  //     this.enemyHPPercentage = Math.max(0, (enemyCurrentHP / enemyMaxHP) * 100);
-  //   }
-  // }
-
-  private updateHPPercentagesFromData(hpData: {
-    playerHP: number;
-    playerMaxHP: number;
-    opponentHP: number;
-    opponentMaxHP: number;
-  }): void {
-    this.playerHPPercentage = Math.max(
-      0,
-      (hpData.playerHP / hpData.playerMaxHP) * 100
-    );
-    this.opponentHPPercentage = Math.max(
-      0,
-      (hpData.opponentHP / hpData.opponentMaxHP) * 100
-    );
-  }
-
-  // public refreshHP(): void {
-  //   this.updateHPPercentages();
-  // }
 }

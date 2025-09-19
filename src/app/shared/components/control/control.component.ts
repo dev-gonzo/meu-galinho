@@ -46,6 +46,8 @@ import { CombatService } from "../../../features/game/services/combat-scene.serv
 })
 export class ControlComponent implements OnInit {
   @Output() toogleChosseScam = new EventEmitter<void>();
+  @Output() toogleDefender = new EventEmitter<void>();
+  @Output() toogleGoGiveUp = new EventEmitter<void>();
 
   private readonly combatService = inject(CombatService);
   private readonly router = inject(Router);
@@ -61,11 +63,8 @@ export class ControlComponent implements OnInit {
   }
 
   exitGame() {
-    // Confirmar se o usuário realmente quer sair
-    if (confirm("Tem certeza que deseja sair do jogo?")) {
-      // Navegar para a página inicial ou fechar o jogo
-      this.router.navigate(["/"]);
-    }
+    console.log("Open Exit");
+    this.toogleGoGiveUp.emit();
   }
 
   openChosseScam() {
@@ -74,7 +73,8 @@ export class ControlComponent implements OnInit {
   }
 
   defend() {
-    // this.combatService.executeDefendTurn();
+    console.log("Open Defender");
+    this.toogleDefender.emit();
   }
 
   special() {

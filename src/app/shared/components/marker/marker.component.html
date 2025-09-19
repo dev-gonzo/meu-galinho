@@ -1,83 +1,63 @@
-<div class="size-h">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col d-flex flex-column align-items-start fw-bolder">
-        <span>Player</span>
-        <div class="w-100 position-relative mt-1">
-          <div class="progress-stacked border border-1 border-black">
-            <div
-              class="progress"
-              role="progressbar"
-              aria-label="Player HP"
-              [attr.aria-valuenow]="playerHPPercentage"
-              aria-valuemin="0"
-              aria-valuemax="100"
-              [style.width.%]="playerHPPercentage"
-            >
-              <div
-                class="progress-bar"
-                [ngClass]="{
-                  'bg-success': playerHPPercentage > 25,
-                  'bg-danger': playerHPPercentage <= 25
-                }"
-              ></div>
-            </div>
-          </div>
-          <img
-            src="assets/elementos/vida.png"
-            alt="Vida"
-            width="30"
-            class="vida-overlay"
-          />
-        </div>
-      </div>
-      <div class="col-3 d-flex flex-column align-items-center pt-2 vs-background">
-        <small class="text-black fw-bold"> VS </small>
-        <small>R{{ currentRound }} | T{{ currentTurn }}</small>
-      </div>
-      <div class="col d-flex flex-column align-items-end fw-bolder">
-        <span> NPC </span>
-        <div class="w-100 position-relative">
-          <div
-            class="progress-stacked border border-1 border-black progress-reverse"
-          >
-            <div
-              class="progress"
-              role="progressbar"
-              aria-label="Opponent HP"
-              [attr.aria-valuenow]="opponentHPPercentage"
-              aria-valuemin="0"
-              aria-valuemax="100"
-              [style.width.%]="opponentHPPercentage"
-            >
-              <div
-                class="progress-bar"
-                [ngClass]="{
-                  'bg-success': opponentHPPercentage > 25,
-                  'bg-danger': opponentHPPercentage <= 25
-                }"
-              ></div>
-            </div>
-            <div
-              class="progress"
-              role="progressbar"
-              aria-label="Opponent HP Lost"
-              [attr.aria-valuenow]="100 - opponentHPPercentage"
-              aria-valuemin="0"
-              aria-valuemax="100"
-              [style.width.%]="100 - opponentHPPercentage"
-            >
-              <div class="progress-bar bg-transparent"></div>
-            </div>
-          </div>
-          <img
-            src="assets/elementos/vida.png"
-            alt="Vida"
-            width="30"
-            class="vida-overlay-opponent inverted"
-          />
-        </div>
-      </div>
+<div class="d-flex justify-content-between">
+  <div class="d-flex flex-column align-items-start" style="width: 148px">
+    <small class="ps-2 fw-bold">Player</small>
+    <div class="position-relative height-maker">
+      <span
+        class="bg-success position-absolute life-bar player-life"
+        [class.animate-fill]="showLifeBars"
+        [style.width.px]="showLifeBars ? (playerHPPercentage / 100) * 115 : 0"
+        style="left: 3px; top: 5px; height: 14px"
+      ></span>
+      <img
+        src="assets/elementos/vida-jogador.png"
+        alt="Vida"
+        class="position-absolute"
+        style="top: 0; width: 140px"
+      />
+    </div>
+    <div class="ps-2 w-100 d-flex align-items-start gap-1" style="height: 20px">
+      <img src="assets/elementos/estrela.png" alt="Vitória round" width="15" />
+      <img src="assets/elementos/estrela.png" alt="Vitória round" width="15" />
+    </div>
+  </div>
+  <div class="pt-2 position-relative">
+    <img
+      class="position-absolute"
+      src="assets/elementos/marcador.png"
+      alt="Versus"
+      style="width: 60px; right: -30px; top: 5px"
+    />
+    <small
+      class="position-absolute text-black fw-bold text-center"
+      style="right: -30px; width: 60px; top: 15px"
+    >
+      VS
+    </small>
+    <small
+      class="position-absolute text-center"
+      style="right: -30px; top: 22px; width: 60px; top: 28px"
+      >R{{ currentRound }}/T{{ currentTurn }}</small
+    >
+  </div>
+  <div class="d-flex flex-column align-items-end" style="width: 148px">
+    <small class="pe-2 fw-bold">Opponent</small>
+    <div class="position-relative height-maker">
+      <span
+        class="bg-success position-absolute life-bar player-life"
+        [class.animate-fill]="showLifeBars"
+        [style.width.px]="showLifeBars ? (playerHPPercentage / 100) * 115 : 0"
+        style="right: 6px; top: 5px; height: 14px"
+      ></span>
+      <img
+        src="assets/elementos/vida-oponente.png"
+        alt="Vida"
+        class="position-absolute"
+        style="right: 2px; top: 0; width: 140px"
+      />
+    </div>
+    <div class="pe-2 d-flex align-items-start justify-content-end gap-1">
+      <img src="assets/elementos/estrela.png" alt="Vitória round" width="15" />
+      <img src="assets/elementos/estrela.png" alt="Vitória round" width="15" />
     </div>
   </div>
 </div>

@@ -1,0 +1,32 @@
+<div class="bg-dropback d-100 vh-100 d-flex justify-content-center">
+  <div class="d-flex flex-column justify-content-center align-items-center">
+    <img
+      src="assets/elementos/desistir-msg.png"
+      alt="Fugir"
+      width="300"
+      [@zoomAnimation]="imageAnimationState"
+    />
+    <button
+      type="button"
+      class="bg-transparent border-0 mt-4"
+      (click)="closeGoGiveUp()"
+      [@zoomAnimation]="imageAnimationState"
+    >
+      <img src="assets/elementos/btn-desistir.png" alt="Desistir" width="200" />
+    </button>
+    <div class="mt-5">
+      <button
+        class="bg-transparent border-0 d-flex justify-content-center align-items-center"
+        (click)="closeGoGiveUp()"
+        [@zoomAnimation]="imageAnimationState"
+      >
+        <img
+          src="assets/elementos/close.png"
+          class="mt-3"
+          alt="Fechar"
+          width="50"
+        />
+      </button>
+    </div>
+  </div>
+</div>

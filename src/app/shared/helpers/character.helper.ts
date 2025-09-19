@@ -289,13 +289,7 @@ export class CharacterHelper {
     return Math.floor(this.strength / 3) + this.level;
   }
 
-  /**
-   * Calcula a fadiga máxima do personagem
-   */
-  calculateMaxFatigue(): number {
-    // fadiga: "rs + ag + nivel"
-    return this.resistance + this.speed + this.level;
-  }
+
 
   /**
    * Atualiza o personagem para um novo nível
@@ -361,7 +355,6 @@ export class CharacterHelper {
       initiative: number;
       dodge: number;
       block: number;
-      maxFatigue: number;
     };
     bonuses: { attack: number; defense: number; dodge: number; damage: number };
     levelData?: Level;
@@ -387,7 +380,6 @@ export class CharacterHelper {
         initiative: this.calculateInitiative(),
         dodge: this.calculateDodge(),
         block: this.calculateBlock(),
-        maxFatigue: this.calculateMaxFatigue(),
       },
       bonuses: {
         attack: this.attackBonus,
